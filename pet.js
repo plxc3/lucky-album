@@ -3,7 +3,7 @@
 const STORAGE_KEY = 'lucky-web-pet-v1';
 // The floating pet renders at 136 CSS pixels or smaller; the full-size images
 // remain available for the character page and original artwork comparison.
-import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261016';
+import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261016-2';
 const rigMarkup = catRig('lucky-pet', true);
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { /* Storage can be unavailable. */ }
@@ -63,6 +63,8 @@ let bubbleTimer;
 let actionTimer;
 let blinkTimer;
 let blinkEndTimer;
+let formTransitionTimers = new Set();
+let formTransitionTarget;
 let activePointer;
 let suppressClick = false;
 let audioContext;
@@ -187,20 +189,64 @@ function closeMenu(restoreFocus = false) {
   if (restoreFocus) menuToggle.focus();
 }
 
-function setPetForm(form, announce = false) {
+function applyPetForm(form) {
   petForm = form === 'human' ? 'human' : 'cat';
   pet.dataset.form = petForm;
   pet.setAttribute('aria-label', `Lucky 网页桌宠，${petForm === 'cat' ? '奶白长毛三花小猫' : '猫耳女孩拟人形态'}`);
   pet.querySelector('[data-pet-action=pet]').textContent = petForm === 'human' ? '♡ 点头打招呼' : '♡ 摸摸 Lucky';
-  pet.querySelector('[data-pet-action=play]').textContent = petForm === 'human' ? '✦ 手边与摆尾回应' : '✦ 一起玩';
+  pet.querySelector('[data-pet-action=play]').textContent = petForm === 'human' ? '✦ 轻轻抬手回应' : '✦ 一起玩';
   sleepButton.textContent = isSleeping ? '☀ 叫醒 Lucky' : petForm === 'human' ? '☾ 休息一下' : '☾ 去睡觉';
   character.setAttribute('aria-label', `点击${petForm === 'cat' ? '小猫 Lucky，变成猫耳女孩' : '猫耳女孩 Lucky，变回小猫'}；可拖动或用方向键移动`);
   if (!pet.hidden) activatePetImages();
   setState(isSleeping ? 'sleep' : 'idle');
-  if (announce) {
-    if (!reducedMotion?.matches) { pet.classList.remove('is-transforming'); void pet.offsetWidth; pet.classList.add('is-transforming'); window.setTimeout(()=>pet.classList.remove('is-transforming'),1000); }
-    showBubble(petForm === 'human' ? '变身啦，再点我变回小猫 ✧' : '毛茸茸的小猫回来啦 ♡'); save();
+}
+
+function stopFormTransition() {
+  formTransitionTimers.forEach(timer=>window.clearTimeout(timer));
+  formTransitionTimers.clear();
+  formTransitionTarget = undefined;
+  delete pet.dataset.transition;
+  delete pet.dataset.targetForm;
+  pet.classList.remove('is-transforming');
+  character.removeAttribute('aria-busy');
+}
+
+function setPetForm(form, announce = false) {
+  const nextForm = form === 'human' ? 'human' : 'cat';
+  if (nextForm === petForm && pet.dataset.form && !formTransitionTarget) return;
+  stopFormTransition();
+  const announceForm = () => {
+    showBubble(petForm === 'human' ? '变身啦，再点我变回小猫 ✧' : '毛茸茸的小猫回来啦 ♡');
+    save();
+  };
+  if (!announce || reducedMotion?.matches || pet.hidden || nextForm === petForm) {
+    applyPetForm(nextForm);
+    if (announce) announceForm();
+    return;
   }
+  closeMenu();
+  setState('idle');
+  formTransitionTarget = nextForm;
+  pet.dataset.targetForm = nextForm;
+  pet.dataset.transition = 'prepare';
+  pet.classList.add('is-transforming');
+  character.setAttribute('aria-busy', 'true');
+  const after = (delay, callback) => {
+    const timer = window.setTimeout(()=>{
+      formTransitionTimers.delete(timer);
+      callback();
+    },delay);
+    formTransitionTimers.add(timer);
+  };
+  // Give the current figure a brief anticipation, crossfade once, then settle.
+  // Neither form is repeatedly swapped and focus stays on the same button.
+  after(220,()=>{
+    pet.dataset.transition = 'handoff';
+    applyPetForm(nextForm);
+    announceForm();
+  });
+  after(600,()=>{pet.dataset.transition = 'settle';});
+  after(1040,()=>{stopFormTransition();scheduleBlink();});
 }
 window.addEventListener('lucky:character-form', event => {
   if (['cat','human'].includes(event.detail?.form)) setPetForm(event.detail.form, true);
@@ -227,7 +273,7 @@ function petLucky() {
 function playLucky() {
   if (isSleeping) toggleSleep();
   setState('play', 2900);
-  showBubble(petForm === 'human' ? '手边和尾巴，都回应你一下 ✦' : '来玩呀！尾巴都摇起来啦 ✦', 2900);
+  showBubble(petForm === 'human' ? '抬起手，回应你一下 ✦' : '来玩呀！尾巴都摇起来啦 ✦', 2900);
   chirp();
 }
 
@@ -246,6 +292,7 @@ function showPet() {
 
 function hidePet() {
   closeMenu();
+  stopFormTransition();
   clearTimeout(actionTimer);
   clearTimeout(blinkTimer);
   clearTimeout(blinkEndTimer);
@@ -371,9 +418,13 @@ window.addEventListener('resize', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
+    if (formTransitionTarget) setPetForm(formTransitionTarget);
     clearTimeout(blinkTimer);
     clearTimeout(blinkEndTimer);
   } else if (pet.dataset.state !== 'sleep') scheduleBlink();
   else if (!isSleeping) setState('idle');
 });
-reducedMotion?.addEventListener?.('change', () => setState(isSleeping ? 'sleep' : 'idle'));
+reducedMotion?.addEventListener?.('change', () => {
+  if (formTransitionTarget) setPetForm(formTransitionTarget);
+  setState(isSleeping ? 'sleep' : 'idle');
+});

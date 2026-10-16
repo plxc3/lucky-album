@@ -1,4 +1,4 @@
-import { notes } from './content.js?v=20261016';
+import { notes } from './content.js?v=20261016-2';
 
 const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia?.('(hover: hover) and (pointer: fine)');

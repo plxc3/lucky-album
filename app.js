@@ -1,6 +1,6 @@
-import {catRig, humanRig} from './character-rig.js?v=20261016';
-import { site, notes } from './content.js?v=20261016';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261016';
+import {catRig, humanRig} from './character-rig.js?v=20261016-2';
+import { site, notes } from './content.js?v=20261016-2';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261016-2';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -189,21 +189,62 @@ const characterForms = [
     alt:'Lucky 的既有绘本风猫耳女孩立绘，奶白长发、暖白外套，完整灰尖长尾在身旁弯起', caption:'猫耳女孩 Lucky · 来自本猫的拟人想象',
   },
 ];
+const characterMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let characterTransition;
+let characterActionTimer;
+let characterActionVersion = 0;
+
 function renderCharacterTransform() {
   return `<section class="character-transform" aria-label="Lucky 的三种模样" data-character-form="cat">
-    <div class="character-transform-intro"><p class="character-kicker">ONE LUCKY / THREE LITTLE WORLDS</p><h1 id="character-title">同一只 Lucky，<br>换个模样陪你。</h1><p>从照片里的小三花，到画里的小姑娘。<br>选一种模样，看看那些一直没变的小特征。</p><div class="character-form-tabs" role="tablist" aria-label="选择 Lucky 的模样">${characterForms.map((form,index)=>`<button type="button" role="tab" id="character-form-${form.id}" data-character-form-tab="${index}" aria-controls="character-form-panel" aria-selected="${form.id==='cat'}" tabindex="${form.id==='cat'?0:-1}">${form.label}</button>`).join('')}</div><div class="character-form-copy" aria-live="polite" aria-atomic="true"><p class="character-form-eyebrow">${characterForms[1].eyebrow}</p><h2>${characterForms[1].title}</h2><p class="character-form-description">${characterForms[1].description}</p></div><p class="character-transform-instruction" id="character-transform-help">轻点小猫，见到画里的她。再点女孩，变回小猫。</p><a class="character-transform-details" href="#character-human-title" data-character-human-jump>翻翻完整拟人设定 <span aria-hidden="true">↓</span></a></div>
-    <div class="character-form-panel" id="character-form-panel" role="tabpanel" aria-labelledby="character-form-cat" tabindex="0">${characterForms.map(form=>`<figure class="character-form-figure character-form-figure--${form.id}" data-character-form-slide="${form.id}" data-active="${form.id==='cat'}" aria-hidden="${form.id!=='cat'}"><div class="character-form-art">${form.id === 'cat' ? catRig('lucky-hero') : form.id === 'human' ? humanRig('lucky-hero') : `<img src="${form.image}" alt="${escape(form.alt)}" width="${form.width}" height="${form.height}" decoding="async" draggable="false">`}</div><figcaption>${form.caption}</figcaption></figure>`).join('')}<button type="button" class="character-form-hit" data-character-transform-hit aria-label="点击像素小猫，变成猫耳女孩" aria-describedby="character-transform-help"></button><span class="lucky-magic" aria-hidden="true"><i class="lucky-magic-ring"></i>${[[-62,-82],[55,-90],[-90,-10],[95,8],[-58,72],[62,80],[-18,-115],[15,108]].map(([x,y],i)=>`<i class="lucky-magic-particle" style="--x:${x}px;--y:${y}px;--delay:${i*20}ms">${i%2?'✧':'✦'}</i>`).join('')}</span><span class="character-transform-spark character-transform-spark--one" aria-hidden="true">✧</span><span class="character-transform-spark character-transform-spark--two" aria-hidden="true">✦</span><span class="character-form-stamp" aria-hidden="true">always<br><i>Lucky.</i></span></div>
+    <div class="character-transform-intro"><p class="character-kicker">ONE LUCKY / THREE LITTLE WORLDS</p><h1 id="character-title">同一只 Lucky，<br>换个模样陪你。</h1><p>从照片里的小三花，到画里的小姑娘。<br>选一种模样，看看那些一直没变的小特征。</p><div class="character-form-tabs" role="tablist" aria-label="选择 Lucky 的模样">${characterForms.map((form,index)=>`<button type="button" role="tab" id="character-form-${form.id}" data-character-form-tab="${index}" aria-controls="character-form-panel" aria-selected="${form.id==='cat'}" tabindex="${form.id==='cat'?0:-1}">${form.label}</button>`).join('')}</div><div class="character-form-copy" aria-live="polite" aria-atomic="true"><p class="character-form-eyebrow">${characterForms[1].eyebrow}</p><h2>${characterForms[1].title}</h2><p class="character-form-description">${characterForms[1].description}</p></div><p class="character-transform-instruction" id="character-transform-help">轻点小猫，见到画里的她。再点女孩，变回小猫。<br>也可以用下面的小动作，和 Lucky 玩一会儿。</p><a class="character-transform-details" href="#character-human-title" data-character-human-jump>翻翻完整拟人设定 <span aria-hidden="true">↓</span></a></div>
+    <div class="character-form-panel" id="character-form-panel" role="tabpanel" aria-labelledby="character-form-cat" tabindex="0"><div class="character-display">${characterForms.map(form=>`<figure class="character-form-figure character-form-figure--${form.id}" data-character-form-slide="${form.id}" data-active="${form.id==='cat'}" aria-hidden="${form.id!=='cat'}"><div class="character-form-art character-rig" data-character="${form.id}">${form.id === 'cat' ? catRig('lucky-hero') : form.id === 'human' ? humanRig('lucky-hero') : `<img src="${form.image}" alt="${escape(form.alt)}" width="${form.width}" height="${form.height}" decoding="async" draggable="false">`}</div><figcaption>${form.caption}</figcaption></figure>`).join('')}<button type="button" class="character-form-hit" data-character-transform-hit aria-label="点击像素小猫，变成猫耳女孩" aria-describedby="character-transform-help"></button><span class="lucky-magic" aria-hidden="true">${[[-62,-82],[55,-90],[-90,-10],[95,8],[-58,72],[62,80]].map(([x,y],i)=>`<i class="lucky-magic-particle" style="--x:${x}px;--y:${y}px;--delay:${i*25}ms">${i%2?'✧':'✦'}</i>`).join('')}</span><span class="character-reaction" aria-hidden="true"></span><span class="character-form-stamp" aria-hidden="true">always<br><i>Lucky.</i></span></div><div class="character-interactions" role="group" aria-label="和画里的 Lucky 互动"><button type="button" data-character-action="pet"><span aria-hidden="true">♡</span> 摸摸</button><button type="button" data-character-action="play"><span aria-hidden="true">✧</span> 逗逗</button><button type="button" data-character-action="rest" aria-pressed="false"><span aria-hidden="true">☾</span> <span data-character-rest-label>休息</span></button></div><p class="character-action-status" role="status" aria-live="polite" aria-atomic="true">摸摸小爪，或逗她玩一会儿。</p></div>
   </section>`;
 }
-function selectCharacterForm(index, moveFocus = false) {
-  const form = characterForms[index];
+function syncCharacterActions(section) {
+  const unavailable = section.dataset.characterForm === 'photo' || !!section.dataset.transformPhase;
+  section.querySelectorAll('[data-character-action]').forEach(button => { button.disabled = unavailable; });
+  const resting = section.dataset.interaction === 'sleep';
+  section.querySelector('[data-character-action="rest"]').setAttribute('aria-pressed', String(resting));
+  section.querySelector('[data-character-rest-label]').textContent = resting ? '叫醒' : '休息';
+}
+function clearCharacterAction(section) {
+  window.clearTimeout(characterActionTimer);
+  characterActionVersion += 1;
+  if (!section) return;
+  delete section.dataset.interaction;
+  section.querySelectorAll('.character-rig').forEach(rig => { delete rig.dataset.interaction; });
+  section.querySelector('.character-reaction').textContent = '';
+  syncCharacterActions(section);
+}
+function interactWithCharacter(action) {
   const section = main.querySelector('.character-transform');
-  if (!form || !section) return;
+  if (!section || section.dataset.characterForm === 'photo' || section.dataset.transformPhase) return;
+  const waking = action === 'rest' && section.dataset.interaction === 'sleep';
+  clearCharacterAction(section);
+  const status = section.querySelector('.character-action-status');
+  if (waking) { status.textContent = '醒啦，又可以一起玩了。'; return; }
+  const state = {pet:'hello', play:'play', rest:'sleep'}[action];
+  if (!state) return;
+  const version = characterActionVersion;
+  // A clean frame lets the same gesture be requested again without a whole-image swap.
+  window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+    if (version !== characterActionVersion || !section.isConnected || section.dataset.transformPhase) return;
+    section.dataset.interaction = state;
+    section.querySelector(`.character-rig[data-character="${section.dataset.characterForm}"]`).dataset.interaction = action;
+    section.querySelector('.character-reaction').textContent = action === 'pet' ? '♡' : action === 'play' ? '✧' : 'zZ';
+    status.textContent = action === 'pet' ? 'Lucky 收下你的摸摸，轻轻回应了一下。' : action === 'play' ? (section.dataset.characterForm === 'human' ? '来玩呀，她轻轻抬手回应你。' : '来玩呀，Lucky 的小尾巴晃起来了。') : 'Lucky 安静下来。想继续玩，轻轻叫醒她。';
+    syncCharacterActions(section);
+    if (action !== 'rest') characterActionTimer = window.setTimeout(() => {
+      if (!section.isConnected || version !== characterActionVersion) return;
+      clearCharacterAction(section);
+      status.textContent = '还想再玩一会儿吗？';
+    }, action === 'pet' ? 2600 : 3200);
+  }));
+}
+function applyCharacterForm(section,index,moveFocus = false) {
+  const form = characterForms[index];
   const selected = section.querySelector(`[data-character-form-tab="${index}"]`);
-  if (selected.getAttribute('aria-selected') === 'true') {
-    if (moveFocus) selected.focus({preventScroll:true});
-    return;
-  }
+  clearCharacterAction(section);
   section.dataset.characterForm = form.id;
   window.dispatchEvent(new CustomEvent('lucky:character-form', {detail:{form:form.id}}));
   section.querySelectorAll('[data-character-form-tab]').forEach(button => {
@@ -222,14 +263,73 @@ function selectCharacterForm(index, moveFocus = false) {
   section.querySelector('.character-form-description').textContent = form.description;
   const target = form.id === 'human' ? '点击猫耳女孩，变回像素小猫' : form.id === 'photo' ? '点击真实 Lucky，看看像素小猫' : '点击像素小猫，变成猫耳女孩';
   section.querySelector('[data-character-transform-hit]').setAttribute('aria-label', target);
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    section.classList.remove('is-transforming');
-    void section.offsetWidth;
-    section.classList.add('is-transforming');
-    window.setTimeout(() => section.classList.remove('is-transforming'), 1000);
-  }
   if (moveFocus) selected.focus({preventScroll:true});
 }
+function finishCharacterTransition(transition, commit = true) {
+  if (characterTransition !== transition) return;
+  transition.timers.forEach(timer => window.clearTimeout(timer));
+  characterTransition = undefined;
+  const section = transition.section;
+  if (!section.isConnected) return;
+  if (commit && section.dataset.characterForm !== characterForms[transition.index].id) applyCharacterForm(section,transition.index,transition.moveFocus);
+  delete section.dataset.transformPhase;
+  section.classList.remove('is-transforming');
+  section.querySelector('[data-character-transform-hit]').removeAttribute('aria-busy');
+  syncCharacterActions(section);
+  section.querySelector('.character-action-status').textContent = section.dataset.characterForm === 'photo' ? '这是照片里的 Lucky。选画里的模样，就可以和她互动。' : '换好模样啦。摸摸她，或一起玩一会儿。';
+  const queued = transition.queued;
+  if (commit && queued && characterForms[queued.index].id !== section.dataset.characterForm) selectCharacterForm(queued.index,queued.moveFocus);
+}
+function selectCharacterForm(index, moveFocus = false) {
+  const form = characterForms[index];
+  const section = main.querySelector('.character-transform');
+  if (!form || !section) return;
+  if (characterTransition) { characterTransition.queued = {index,moveFocus}; return; }
+  if (section.dataset.characterForm === form.id) {
+    if (moveFocus) section.querySelector(`[data-character-form-tab="${index}"]`).focus({preventScroll:true});
+    return;
+  }
+  if (characterMotion.matches) {
+    applyCharacterForm(section,index,moveFocus);
+    syncCharacterActions(section);
+    section.querySelector('.character-action-status').textContent = form.id === 'photo' ? '照片里的 Lucky，是每一种画法的起点。' : '摸摸她，或一起玩一会儿。';
+    return;
+  }
+  clearCharacterAction(section);
+  const transition = {section,index,moveFocus,timers:new Set()};
+  characterTransition = transition;
+  const later = (fn,delay) => {
+    const timer = window.setTimeout(() => { transition.timers.delete(timer); if (characterTransition === transition && section.isConnected) fn(); },delay);
+    transition.timers.add(timer);
+  };
+  section.dataset.transformPhase = 'loading';
+  section.querySelector('[data-character-transform-hit]').setAttribute('aria-busy','true');
+  syncCharacterActions(section);
+  section.querySelector('.character-action-status').textContent = 'Lucky 正在换个模样……';
+  const begin = () => {
+    if (characterTransition !== transition || !section.isConnected) return;
+    if (characterMotion.matches) { finishCharacterTransition(transition); return; }
+    section.dataset.transformPhase = 'prepare';
+    section.classList.add('is-transforming');
+    later(() => {
+      applyCharacterForm(section,index,moveFocus);
+      section.dataset.transformPhase = 'handoff';
+    },340);
+    later(() => { section.dataset.transformPhase = 'settle'; },460);
+    later(() => finishCharacterTransition(transition),980);
+  };
+  const incoming = new Image();
+  incoming.src = form.image;
+  // The incoming source is ready before movement; a failed image never traps controls.
+  const ready = incoming.decode ? incoming.decode().catch(() => {}) : Promise.resolve();
+  let started = false;
+  const startOnce = () => { if (!started) { started = true; begin(); } };
+  ready.then(startOnce);
+  later(startOnce,900);
+}
+characterMotion.addEventListener('change', () => {
+  if (characterMotion.matches && characterTransition) finishCharacterTransition(characterTransition);
+});
 
 function renderCharacter() {
   return `<section class="character-view" aria-labelledby="character-title">
@@ -261,6 +361,8 @@ function pauseInlineVideos() {
   main.querySelectorAll('video').forEach(element => element.pause());
 }
 function render() {
+  if (characterTransition) finishCharacterTransition(characterTransition,false);
+  clearCharacterAction(main.querySelector('.character-transform'));
   if (dialog.open) closePhoto();
   imageObserver?.disconnect();
   pauseInlineVideos();
@@ -373,20 +475,13 @@ function closePhoto() {
   document.documentElement.classList.remove('modal-open');
   if (lastPhotoButton?.isConnected) lastPhotoButton.focus({preventScroll:true});
 }
-function greetCharacter(event) {
-  const frame = event.target.closest?.('[data-character-transform-hit]');
-  const section = frame?.closest('.character-transform');
-  if (!section || section.dataset.characterForm === 'photo' || section.dataset.interaction === 'hello') return;
-  section.dataset.interaction = 'hello';
-  window.setTimeout(() => { if (section.isConnected) section.dataset.interaction = ''; }, 2000);
-}
-main.addEventListener('pointerover', greetCharacter);
-main.addEventListener('focusin', greetCharacter);
 main.addEventListener('click', event => {
+  const action = event.target.closest('[data-character-action]');
+  if (action) { interactWithCharacter(action.dataset.characterAction); return; }
   const formTab = event.target.closest('[data-character-form-tab]');
   if (formTab) { selectCharacterForm(Number(formTab.dataset.characterFormTab)); return; }
   if (event.target.closest('[data-character-transform-hit]')) {
-    if (main.querySelector('.character-transform')?.classList.contains('is-transforming')) return;
+    if (characterTransition) return;
     const current = main.querySelector('.character-transform')?.dataset.characterForm;
     selectCharacterForm(current === 'cat' ? 2 : 1);
     return;

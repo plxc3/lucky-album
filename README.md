@@ -11,7 +11,7 @@ Lucky 的照片、日记、视频和会互动的网页形象，沿用原有相�
 - 54 条独立记录：30 段视频、24 张照片。新增 17 段已核对的 Lucky 家庭视频；身份未确认的其他猫咪素材暂不收录。
 - 16 张既有照片补入更高像素版本。原 JPG 保留；两张 HEIC 同时保留可下载源件和浏览器全尺寸 JPG。
 - 在形象页或浮动桌宠上直接点击小猫，会变为猫耳女孩；再点击女孩变回小猫。没有单独的变身按钮。
-- 小猫保留呼吸、眨眼、耳尾与爪部动作；女孩有点头、手边回应、摆尾和休息动作。桌宠菜单提供互动，键盘 Enter／空格也能变换形态。
+- 小猫保留呼吸、眨眼、耳尾与爪部动作；女孩有点头、手边回应和休息动作。形象页提供“摸摸／逗逗／休息”，桌宠菜单也提供互动，键盘 Enter／空格也能变换形态。
 - 声音默认关闭；可选提示音是网页合成音，不冒充 Lucky 的真实猫叫。
 
 Lucky 是主人提供的三个月大长尾母三花。保留第二版柔和坐姿、奶白长毛、烟灰与浅杏斑块、粉鼻及灰尖长尾；旧版站姿和独立拟人设定稿继续保留。
@@ -40,6 +40,6 @@ GitHub Pages 沿用本仓库 `main` 分支根目录发布，`.nojekyll` 让文�
 - `MEDIA_20261016.json`：本轮 69 个媒体文件的字节长度与 SHA-256。
 - `QUALITY.md`：本轮验证范围及限制。
 
-变换过渡参考 [Chrome View Transitions 的圆形展开示例](https://view-transitions.chrome.dev/circle/spa/)，使用本项目自己的 CSS 圆形揭示、少量星点与既有角色素材实现，没有引入新的动画依赖。字体为 Noto Serif CJK SC 子集，许可保存在 `assets/lucky-album-serif-LICENSE.txt`。
+变换使用准备、柔和交接和落定三个阶段：主角色约 980ms，浮动角色约 1040ms。点击角色本身触发，保留键盘与减少动态支持。抬爪按 SVG 坐标尺度调整，缩到桌宠尺寸仍可见；先去除原部件轮廓，再叠加局部动作，减少重影。当前是既有插画的分层交互，尚未接入真实 Cubism 模型。字体为 Noto Serif CJK SC 子集，许可保存在 `assets/lucky-album-serif-LICENSE.txt`。
 
-本轮还参考了主人提供的 [Takayu Motion Reference](https://motion-reference.takayustudio.jp/) 中的圆形展开、角色待机与尾巴跟随示例：变换揭示约 760ms，打招呼时头部先动，手部和尾巴稍后回应，并在返回待机前收住动作。具体图层与动作由本项目独立实现。
+动效节奏参考主人提供的 [Takayu Motion Reference](https://motion-reference.takayustudio.jp/)。另阅读 [live2d-widget](https://github.com/stevenjoezhang/live2d-widget)、[l2d-widget（原 oh-my-live2d）](https://github.com/hacxy/l2d-widget)、[oneko.js](https://github.com/adryd325/oneko.js) 等作者仓库，借鉴动作状态与切换生命周期。本次没有拷入它们的代码或第三方模型，也没有增加动画依赖。Lucky 自有 Live2D 模型制作源包另存于维护工作区，完成网格、参数绑定和真实导出验证后再接入。

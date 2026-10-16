@@ -48,9 +48,200 @@
 @media(max-width:380px){.character-transform{padding:19px 16px;gap:22px}.character-transform h1{font-size:1.8rem}.character-form-tabs{gap:1px}.character-form-tabs button{padding-inline:9px}.character-form-panel{min-height:360px;padding-inline:10px}.character-form-art img{height:300px}.character-form-copy h2{font-size:1.25rem}.character-transform-next{padding-inline:12px}.lightbox-top .original-download{order:4;width:100%;margin:0}}
 @media(prefers-reduced-motion:reduce){.character-form-figure{transition:none}}
 
-/* Click the character itself: a quiet circular reveal and a few gold sparks. */
-.character-transform-instruction{margin:21px 0 3px;color:#84714d;font-size:.8125rem;line-height:1.9}.character-form-hit{position:absolute;inset:0;z-index:4;width:100%;height:100%;border:0;border-radius:3px;background:transparent;cursor:pointer;touch-action:manipulation}.character-form-hit:focus-visible{outline:2px solid #496b50;outline-offset:5px}.lucky-magic{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}.lucky-magic-ring{position:absolute;display:block;left:50%;top:49%;width:64%;aspect-ratio:1;border:1px solid #c6aa69;border-radius:50%;opacity:0;transform:translate(-50%,-50%) scale(.25)}.lucky-magic-particle{position:absolute;left:50%;top:49%;display:block;color:#bd9c58;font:16px/1 Georgia;opacity:0;transform:translate(-50%,-50%) scale(0)}.lucky-magic-particle:nth-child(3n){color:#c18f83}.is-transforming .lucky-magic-ring{animation:lucky-magic-ring 820ms cubic-bezier(.22,1,.36,1) both}.is-transforming .lucky-magic-particle{animation:lucky-magic-particle 760ms cubic-bezier(.22,1,.36,1) var(--delay,0ms) both}.character-transform.is-transforming .character-form-figure[data-active=true] img{animation:lucky-character-reveal 760ms cubic-bezier(.22,1,.36,1) both}
-@keyframes lucky-character-reveal{from{clip-path:circle(0% at 50% 50%);opacity:.4}to{clip-path:circle(80% at 50% 50%);opacity:1}}
+/* Click the character itself; shared particles also accompany the floating pet. */
+.character-transform-instruction{margin:21px 0 3px;color:#84714d;font-size:.8125rem;line-height:1.9}.character-form-hit{position:absolute;inset:0;z-index:4;width:100%;height:100%;border:0;border-radius:3px;background:transparent;cursor:pointer;touch-action:manipulation}.character-form-hit:focus-visible{outline:2px solid #496b50;outline-offset:5px}.lucky-magic{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}.lucky-magic-ring{position:absolute;display:block;left:50%;top:49%;width:64%;aspect-ratio:1;border:1px solid #c6aa69;border-radius:50%;opacity:0;transform:translate(-50%,-50%) scale(.25)}.lucky-magic-particle{position:absolute;left:50%;top:49%;display:block;color:#bd9c58;font:16px/1 Georgia;opacity:0;transform:translate(-50%,-50%) scale(0)}.lucky-magic-particle:nth-child(3n){color:#c18f83}.is-transforming .lucky-magic-ring{animation:lucky-magic-ring 820ms cubic-bezier(.22,1,.36,1) both}.is-transforming .lucky-magic-particle{animation:lucky-magic-particle 760ms cubic-bezier(.22,1,.36,1) var(--delay,0ms) both}
+@keyframes lucky-character-reveal{from{opacity:0;transform:translateY(3px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes lucky-magic-ring{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}20%{opacity:.65}100%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}}
 @keyframes lucky-magic-particle{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}25%{opacity:.9}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.55) rotate(50deg)}}
 @media(prefers-reduced-motion:reduce){.lucky-magic{display:none!important}.character-form-figure,.lucky-pet-human{transition:none!important}}
+
+
+/* A single illustrated handoff: the two faces never overlap. */
+.character-transform .character-form-panel {
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  padding:20px 17px 16px;
+  min-height:0;
+}
+.character-display {
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  min-width:0;
+  flex:1;
+}
+.character-transform .character-form-figure {
+  opacity:0;
+  visibility:hidden;
+  transition:none;
+  pointer-events:none;
+}
+.character-transform .character-form-figure[data-active=true] {
+  opacity:1;
+  visibility:visible;
+}
+.character-transform .character-form-art {
+  transform-origin:50% 86%;
+  will-change:auto;
+}
+.character-transform[data-transform-phase] .character-form-art {
+  will-change:transform,opacity;
+}
+.character-transform.is-transforming .character-form-figure[data-active=true] .character-form-art>svg,
+.character-transform.is-transforming .character-form-figure[data-active=true] .character-form-art>img {
+  animation:none!important;
+  clip-path:none!important;
+}
+.character-transform[data-transform-phase=prepare] .character-form-figure[data-active=true] .character-form-art {
+  animation:lucky-hero-gather 340ms cubic-bezier(.45,0,.6,1) both;
+}
+.character-transform[data-transform-phase=handoff] .character-form-figure[data-active=true] .character-form-art {
+  animation:lucky-hero-handoff 120ms linear both;
+}
+.character-transform[data-transform-phase=settle] .character-form-figure[data-active=true] .character-form-art {
+  animation:lucky-hero-settle 520ms cubic-bezier(.16,.8,.3,1) both;
+}
+.character-display::after {
+  content:"";
+  position:absolute;
+  z-index:2;
+  inset:6% 1% 10%;
+  border-radius:38%;
+  background:radial-gradient(ellipse at 50% 61%,#d5c49a44 0,#ddcfa328 34%,#d5c49a00 70%);
+  opacity:0;
+  pointer-events:none;
+  transform:scale(.94);
+}
+.character-transform.is-transforming .character-display::after {
+  animation:lucky-hero-warmth 980ms ease-in-out both;
+}
+.character-transform .lucky-magic-particle {
+  font-size:13px;
+  color:#aa935e;
+}
+.character-transform.is-transforming .lucky-magic-particle {
+  animation:lucky-hero-dust 820ms ease-out var(--delay,0ms) both;
+}
+.character-transform .character-form-hit {
+  z-index:4;
+  inset:0;
+  height:100%;
+}
+.character-transform .character-form-hit[aria-busy=true] {cursor:progress}
+.character-interactions {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  position:relative;
+  z-index:5;
+  padding-top:14px;
+  border-top:1px solid #d8cdb6;
+}
+.character-interactions button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  min-width:0;
+  min-height:44px;
+  flex:1 1 5.5em;
+  padding:8px 9px;
+  border:1px solid #c9c5ad;
+  border-radius:100px;
+  background:#fffaf0;
+  color:#3b5640;
+  font-size:.8125rem;
+  line-height:1.45;
+  white-space:nowrap;
+  transition:background .18s ease,border-color .18s ease;
+}
+.character-interactions button>span:first-child {color:#94784c;font-size:1.1rem;line-height:1}
+.character-interactions button:hover:not(:disabled) {background:#e9eddf;border-color:#a0b090}
+.character-interactions button:focus-visible {outline:2px solid #345842;outline-offset:3px}
+.character-interactions button:disabled {opacity:.5;cursor:default}
+.character-transform[data-interaction=hello] [data-character-action=pet],
+.character-transform[data-interaction=play] [data-character-action=play],
+.character-transform[data-interaction=sleep] [data-character-action=rest] {
+  background:#dce7d4;
+  border-color:#89a077;
+  color:#284c34;
+}
+.character-action-status {
+  min-height:3.4em;
+  margin:-5px 0 0;
+  color:#6c725f;
+  text-align:center;
+  font-size:.75rem;
+  line-height:1.7;
+  overflow-wrap:anywhere;
+}
+.character-reaction {
+  position:absolute;
+  z-index:3;
+  right:14%;
+  top:20%;
+  color:#bd8180;
+  font:26px/1 Georgia,serif;
+  opacity:0;
+  pointer-events:none;
+}
+.character-transform[data-interaction=hello] .character-reaction {animation:lucky-hero-heart 2.6s ease-out both}
+.character-transform[data-interaction=play] .character-reaction {color:#ad8d4c;animation:lucky-hero-invite 1.3s ease-in-out 2 both}
+.character-transform[data-interaction=sleep] .character-reaction {color:#718477;font-size:20px;opacity:.8;animation:lucky-hero-rest 3.3s ease-in-out infinite}
+@keyframes lucky-hero-gather {
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  38%{opacity:1;transform:translateY(2px) scale(.985)}
+  72%{opacity:.56;transform:translateY(5px) scale(.967)}
+  100%{opacity:0;transform:translateY(6px) scale(.96)}
+}
+@keyframes lucky-hero-handoff {
+  from{opacity:0;transform:translateY(6px) scale(.96)}
+  to{opacity:.24;transform:translateY(5px) scale(.974)}
+}
+@keyframes lucky-hero-settle {
+  0%{opacity:.24;transform:translateY(5px) scale(.974)}
+  60%{opacity:.94;transform:translateY(-1px) scale(1.003)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes lucky-hero-warmth {
+  0%,100%{opacity:0;transform:scale(.94)}
+  35%,44%{opacity:.9;transform:scale(1.015)}
+  76%{opacity:.18;transform:scale(1.04)}
+}
+@keyframes lucky-hero-dust {
+  0%,12%{opacity:0;transform:translate(-50%,-50%) scale(.55)}
+  38%{opacity:.5}
+  100%{opacity:0;transform:translate(calc(var(--x)*.75),calc(var(--y)*.75)) scale(.8)}
+}
+@keyframes lucky-hero-heart {
+  0%{opacity:0;transform:translateY(10px) scale(.8)}
+  20%,55%{opacity:.9;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-20px) scale(.95)}
+}
+@keyframes lucky-hero-invite {
+  0%,100%{opacity:.3;transform:translateY(2px) rotate(-8deg)}
+  45%{opacity:1;transform:translateY(-8px) rotate(8deg)}
+}
+@keyframes lucky-hero-rest {
+  0%,100%{transform:translateY(2px)}
+  50%{transform:translateY(-5px)}
+}
+@media(max-width:760px) {
+  .character-transform .character-form-panel{padding:17px 15px 12px;gap:14px}
+  .character-action-status{font-size:.75rem}
+}
+@media(max-width:380px) {
+  .character-transform .character-form-panel{padding:14px 10px 10px;gap:12px}
+  .character-interactions{gap:5px;padding-top:12px}
+  .character-interactions button{padding:8px 5px;gap:3px;font-size:.75rem}
+  .character-reaction{right:9%;font-size:23px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .character-transform .character-form-art,
+  .character-transform .character-display::after,
+  .character-transform .character-reaction {animation:none!important;transition:none!important;transform:none!important}
+  .character-transform[data-interaction] .character-reaction{opacity:.85}
+  .character-interactions button{transition:none}
+}
