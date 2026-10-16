@@ -1,0 +1,355 @@
+.lucky-pet {
+  position: fixed;
+  z-index: 8;
+  width: 136px;
+  height: 174px;
+  color: #36473b;
+  font-family: system-ui, -apple-system, "Noto Sans SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lucky-pet[hidden], .lucky-pet-launcher[hidden],
+.lucky-pet-bubble[hidden], .lucky-pet-menu[hidden] { display: none !important; }
+.lucky-pet-character {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 130px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+}
+.lucky-pet-character:active, .lucky-pet-dragging .lucky-pet-character { cursor: grabbing; }
+.lucky-pet-rig, .lucky-pet-pose {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: calc(100% - 4px);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 5px 4px #5d554429);
+  pointer-events: none;
+}
+.lucky-pet-rig { overflow: visible; transition: opacity .34s ease; }
+.lucky-pet-rig image { image-rendering: pixelated; }
+.lucky-pet-pose {
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .34s ease, visibility 0s linear .34s;
+}
+.lucky-pet[data-state="sleep"] .lucky-pet-rig { opacity: 0; }
+.lucky-pet[data-state="sleep"] .lucky-pet-pose {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+/* The complete, opaque idle image stays still. Only inner fur details move. */
+.lucky-pet-rig g { transform-box: view-box; }
+.lucky-pet-tail, .lucky-pet-paw-left, .lucky-pet-paw-right { opacity: .9; }
+.lucky-pet-ear-left, .lucky-pet-ear-right { opacity: .85; }
+.lucky-pet-chest { opacity: .88; }
+.lucky-pet-tail {
+  transform-origin: 78% 52%;
+  animation: lucky-tail-breathe 5.8s ease-in-out infinite;
+}
+.lucky-pet-chest {
+  transform-origin: 45% 72%;
+  animation: lucky-chest-breathe 3.8s ease-in-out infinite;
+}
+.lucky-pet-ear-left {
+  transform-origin: 28% 27%;
+  animation: lucky-ear-listen-left 12.8s ease-in-out infinite;
+}
+.lucky-pet-ear-right {
+  transform-origin: 55% 27%;
+  animation: lucky-ear-listen-right 14.4s ease-in-out infinite;
+}
+.lucky-pet-paw-left {
+  transform-origin: 37% 89%;
+  animation: lucky-paw-knead 9.5s ease-in-out infinite;
+}
+.lucky-pet-paw-right {
+  transform-origin: 50% 89%;
+  animation: lucky-paw-knead 9.5s ease-in-out -4.8s infinite;
+}
+.lucky-pet-blink { opacity: 0; }
+.lucky-pet.is-blinking .lucky-pet-blink { opacity: 1; }
+.lucky-pet[data-state="hello"] .lucky-pet-paw-right {
+  animation: lucky-paw-wave 1.4s ease-in-out 1 both;
+}
+.lucky-pet[data-state="play"] .lucky-pet-paw-left {
+  animation: lucky-paw-reach 1.25s ease-in-out infinite;
+}
+.lucky-pet[data-state="play"] .lucky-pet-paw-right {
+  animation: lucky-paw-reach 1.25s ease-in-out -.63s infinite;
+}
+.lucky-pet[data-state="play"] .lucky-pet-tail {
+  animation: lucky-tail-play 2s ease-in-out infinite;
+}
+.lucky-pet[data-state="sleep"] .lucky-pet-rig g { animation-play-state: paused; }
+@keyframes lucky-chest-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: translateY(-.25px) scale(1.003, 1.015); }
+}
+@keyframes lucky-tail-breathe {
+  0%, 100% { transform: rotate(-.5deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes lucky-tail-play {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes lucky-ear-listen-left {
+  0%, 56%, 68%, 100% { transform: rotate(0); }
+  60% { transform: rotate(-1.3deg); }
+  64% { transform: rotate(.6deg); }
+}
+@keyframes lucky-ear-listen-right {
+  0%, 67%, 80%, 100% { transform: rotate(0); }
+  71% { transform: rotate(1.3deg); }
+  75% { transform: rotate(-.6deg); }
+}
+@keyframes lucky-paw-knead {
+  0%, 67%, 80%, 100% { transform: translateY(0) rotate(0); }
+  72% { transform: translateY(-1px) rotate(-1deg); }
+  76% { transform: translateY(-.5px) rotate(-.5deg); }
+}
+@keyframes lucky-paw-wave {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  27%, 70% { transform: translate(-1px, -2.5px) rotate(-2.5deg); }
+  48% { transform: translate(-.5px, -2px) rotate(1deg); }
+}
+@keyframes lucky-paw-reach {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  45% { transform: translate(-1px, -2px) rotate(-1.5deg); }
+}
+.lucky-pet-shadow {
+  position: absolute;
+  bottom: 1px;
+  left: 22px;
+  width: 91px;
+  height: 9px;
+  border-radius: 50%;
+  background: #594b3933;
+  filter: blur(4px);
+}
+.lucky-pet-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 44px;
+  margin-top: -1px;
+}
+.lucky-pet-name {
+  padding: 3px 9px;
+  border: 1px solid #d7cbb6;
+  border-radius: 99px;
+  background: #fffaf0ed;
+  box-shadow: 0 3px 9px #554c3b1a;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 12px;
+  letter-spacing: .015em;
+  line-height: 1.2;
+}
+.lucky-pet-name span { color: #b79862; }
+.lucky-pet-menu-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0 0 8px;
+  border: 1px solid #d7cbb6;
+  border-radius: 50%;
+  background: #fffaf0;
+  color: #556553;
+  box-shadow: 0 3px 9px #554c3b1a;
+  font-size: 20px;
+  line-height: 1;
+}
+.lucky-pet-menu-toggle:hover, .lucky-pet-launcher:hover { background: #e9f0df; }
+.lucky-pet button:focus-visible, .lucky-pet-launcher:focus-visible { outline: 2px solid #4e7056; outline-offset: 2px; }
+.lucky-pet-bubble {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  bottom: calc(100% - 10px);
+  width: max-content;
+  max-width: min(215px, calc(100vw - 22px));
+  padding: 10px 13px;
+  border: 1px solid #d9ccb3;
+  border-radius: 14px 14px 14px 3px;
+  background: #fffaf0;
+  box-shadow: 0 8px 20px #5e55402a;
+  color: #465748;
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+}
+.lucky-pet-near-right .lucky-pet-bubble { right: 0; left: auto; }
+.lucky-pet-near-top .lucky-pet-bubble {
+  top: calc(100% + 5px);
+  bottom: auto;
+  border-radius: 3px 14px 14px 14px;
+}
+.lucky-pet-menu {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(100% + 9px);
+  left: 0;
+  display: grid;
+  gap: 2px;
+  width: min(197px, calc(100vw - 12px));
+  padding: 12px;
+  border: 1px solid #d7cbb6;
+  border-radius: 13px;
+  background: #fffaf0;
+  box-shadow: 0 15px 32px #574d3d30;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.lucky-pet-near-right .lucky-pet-menu { right: 0; left: auto; }
+.lucky-pet-near-top .lucky-pet-menu { top: calc(100% + 8px); bottom: auto; }
+.lucky-pet-menu-title {
+  margin: 0;
+  color: #405d49;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.lucky-pet-menu-subtitle { margin: 0 0 6px; color: #777567; font-size: 11px; }
+.lucky-pet-menu button {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #3d4f40;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: left;
+}
+.lucky-pet-menu button:hover, .lucky-pet-menu button:focus-visible { background: #ebefdf; }
+.lucky-pet-menu button[data-pet-action="hide"] { border-top: 1px solid #e6ddcc; border-radius: 0; color: #796b60; }
+.lucky-pet-menu-help { margin: 6px 2px 0; color: #797566; font-size: 10px; line-height: 1.5; }
+.lucky-pet-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.lucky-pet-heart {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  right: 14px;
+  color: #d97883;
+  font-family: monospace;
+  font-size: 25px;
+  line-height: 1;
+  text-shadow: 2px 0 #fff5e9, -2px 0 #fff5e9, 0 2px #fff5e9, 0 -2px #fff5e9;
+  opacity: 0;
+  pointer-events: none;
+}
+.lucky-pet-spark, .lucky-pet-dream {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  font-family: ui-monospace, monospace;
+  line-height: 1;
+  text-shadow: 2px 0 #fff5e9, -2px 0 #fff5e9, 0 2px #fff5e9, 0 -2px #fff5e9;
+}
+.lucky-pet-spark { top: 30px; right: 8px; color: #d9a85d; font-size: 22px; }
+.lucky-pet-dream { top: 18px; right: 17px; color: #879498; font-size: 17px; letter-spacing: -.08em; }
+.lucky-pet-launcher {
+  position: fixed;
+  z-index: 8;
+  right: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 64px;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid #d4c7b1;
+  border-radius: 99px;
+  background: #fffaf0;
+  box-shadow: 0 7px 20px #50463437;
+  color: #46604d;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 12px;
+}
+.lucky-pet-launcher span:first-child { font-size: 17px; }
+.lucky-pet[data-state="hello"] .lucky-pet-heart { animation: lucky-pet-heart 1.5s steps(4, end) forwards; }
+.lucky-pet[data-state="play"] .lucky-pet-spark { animation: lucky-pet-spark .8s steps(3, end) infinite; }
+.lucky-pet[data-state="sleep"] .lucky-pet-dream { animation: lucky-pet-dream 2.8s steps(4, end) infinite; }
+@keyframes lucky-pet-heart { 0% { opacity: 0; transform: translateY(8px) scale(.75); } 25%, 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px) scale(1.15); } }
+@keyframes lucky-pet-spark { 0%, 100% { opacity: 0; transform: translate(0, 5px); } 35%, 70% { opacity: 1; transform: translate(-4px, -3px); } }
+@keyframes lucky-pet-dream { 0%, 100% { opacity: 0; transform: translateY(5px); } 35%, 70% { opacity: .9; transform: translateY(-6px); } }
+@media (max-width: 640px) {
+  .lucky-pet { width: 90px; height: 124px; }
+  .lucky-pet-character { height: 82px; }
+  .lucky-pet-shadow { left: 14px; width: 62px; }
+  .lucky-pet-launcher { width: 44px; min-width: 44px; min-height: 44px; justify-content: center; padding: 0; }
+  .lucky-pet-launcher span:last-child { display: none; }
+  /* Keep reading and lock links outside the fixed launcher's right-hand lane. */
+  .note-pagination, .site-footer { padding-right: 56px; }
+  .lucky-pet-bubble { font-size: 11px; }
+  .lucky-pet-name { padding-inline: 7px; font-size: 11px; }
+  .lucky-pet-heart { top: 5px; right: 3px; font-size: 19px; }
+  .lucky-pet-spark { top: 9px; right: 1px; font-size: 17px; }
+  .lucky-pet-dream { top: 4px; right: 3px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lucky-pet *, .lucky-pet *::before, .lucky-pet *::after { animation: none !important; transition: none !important; }
+  .lucky-pet[data-state="hello"] .lucky-pet-heart,
+  .lucky-pet[data-state="play"] .lucky-pet-spark,
+  .lucky-pet[data-state="sleep"] .lucky-pet-dream { opacity: 1; }
+}
+
+/* A complete portrait card is the human form; the cat keeps its existing rig. */
+.lucky-pet-human{display:block;position:absolute;left:50%;bottom:4px;height:calc(100% - 8px);width:calc((100% - 8px)*.67);max-width:100%;object-fit:contain;transform:translateX(-50%);padding:4px;border:1px solid #d5c6a8;border-radius:5px;background:#fffaf0;box-shadow:0 4px 13px #6f604533;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility 0s .45s}
+.lucky-pet[data-form=human] .lucky-pet-human{opacity:1;visibility:visible;transition-delay:0s}.lucky-pet[data-form=human] .lucky-pet-rig,.lucky-pet[data-form=human] .lucky-pet-pose,.lucky-pet[data-form=human] .lucky-pet-shadow{opacity:0;visibility:hidden}.lucky-pet[data-form=human] .lucky-pet-rig g{animation-play-state:paused}.lucky-pet-bar{gap:1px}.lucky-pet-name{padding-inline:6px}.lucky-pet-form-toggle{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #d7cbb6;border-radius:50%;background:#fffaf0;color:#6c805b;box-shadow:0 3px 9px #554c3b1a;font-size:23px;line-height:1}.lucky-pet-form-toggle:hover{background:#e9f0df}.lucky-pet[data-form=human] .lucky-pet-form-toggle{color:#aa8754;background:#fff5dd}.lucky-pet-menu-help{font-size:11px}
+@media(max-width:640px){.lucky-pet{height:128px}.lucky-pet-bar{justify-content:space-between}.lucky-pet-name{display:none}.lucky-pet-form-toggle,.lucky-pet-menu-toggle{width:44px;min-width:44px}.lucky-pet-human{width:auto;max-width:82%;height:calc(100% - 7px)}}
+.lucky-pet-bar{justify-content:center;gap:4px}.lucky-pet-name{display:inline-block}.lucky-pet.is-transforming[data-form=human] .lucky-pet-human,.lucky-pet.is-transforming[data-form=cat] .lucky-pet-rig{animation:lucky-character-reveal 760ms cubic-bezier(.22,1,.36,1) both}.lucky-pet .lucky-magic{z-index:3}.lucky-pet .lucky-magic-ring{width:85%}.lucky-pet .lucky-magic-particle{font-size:13px}.lucky-pet-character{cursor:pointer}.lucky-pet-character:active,.lucky-pet-dragging .lucky-pet-character{cursor:grabbing}
+/* Shared illustration rigs: keep both forms responsive without swapping frames. */
+.lucky-human-rig{display:block;width:100%;height:100%;overflow:visible}.lucky-human-rig g{transform-box:view-box}.lucky-human-head{transform-origin:50% 31%}.lucky-human-handLeft{transform-origin:55% 45%}.lucky-human-handRight{transform-origin:65% 44%}.lucky-human-tail{transform-origin:34% 65%}
+.lucky-pet[data-form=human][data-state=hello] .lucky-human-head,.character-transform[data-interaction=hello] .lucky-human-head{animation:lucky-human-nod 1.1s ease-in-out 1 both}
+.lucky-pet[data-form=human][data-state=hello] .lucky-human-handLeft,.character-transform[data-interaction=hello] .lucky-human-handLeft{animation:lucky-human-hand 1.2s ease-in-out 80ms 1 both}
+.lucky-pet[data-form=human][data-state=play] .lucky-human-handLeft,.lucky-pet[data-form=human][data-state=play] .lucky-human-handRight{animation:lucky-human-hand 1.1s ease-in-out infinite}
+.lucky-pet[data-form=human][data-state=play] .lucky-human-tail{animation:lucky-human-tail 1.5s ease-in-out infinite}
+.lucky-pet[data-form=human][data-state=sleep] .lucky-human-head{animation:lucky-human-doze 3s ease-in-out infinite}
+.lucky-pet[data-form=human][data-state=hello]{animation:lucky-human-card-greet 1.3s ease-in-out}
+.character-transform[data-interaction=hello] .lucky-pet-paw-right{animation:lucky-paw-wave 1.4s ease-in-out}
+.character-transform[data-interaction=hello] .lucky-human-tail{animation:lucky-human-tail 1.5s ease-in-out 160ms 1 both}
+.character-transform[data-interaction=hello] .lucky-pet-blink{animation:lucky-hero-blink 250ms 300ms}
+.character-form-figure[data-active=false] g{animation-play-state:paused}
+.character-form-art .lucky-pet-rig,.character-form-art .lucky-human-rig{position:relative;left:auto;bottom:auto;width:100%;height:455px;max-width:100%;filter:none}
+.character-transform.is-transforming .character-form-figure[data-active=true] .character-form-art>svg{animation:lucky-character-reveal 760ms cubic-bezier(.22,1,.36,1) both}
+@keyframes lucky-human-nod{0%,100%{transform:rotate(0deg) translateY(0)}40%{transform:rotate(1.8deg) translateY(3px)}70%{transform:rotate(-.5deg) translateY(.5px)}}
+@keyframes lucky-human-hand{0%,100%{transform:translateY(0) rotate(0deg)}45%{transform:translateY(-9px) rotate(-3deg)}75%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes lucky-human-tail{0%,100%{transform:rotate(0deg)}33%{transform:rotate(3deg)}70%{transform:rotate(-2deg)}}
+@keyframes lucky-human-doze{0%,100%{transform:rotate(.5deg) translateY(1px)}50%{transform:rotate(2deg) translateY(4px)}}
+@keyframes lucky-human-card-greet{0%,100%{translate:0 0}40%{translate:0 -2px}}
+@keyframes lucky-hero-blink{0%,100%{opacity:0}25%,75%{opacity:1}}
+@media(max-width:760px){.character-form-art .lucky-pet-rig,.character-form-art .lucky-human-rig{height:365px}}
+@media(max-width:380px){.character-form-art .lucky-pet-rig,.character-form-art .lucky-human-rig{height:300px}}
+@media(prefers-reduced-motion:reduce){.character-transform svg *, .lucky-human-rig *, .lucky-pet{animation:none!important;transition:none!important}}
+.lucky-pet .lucky-pet-human{width:64%;height:calc(100% - 8px)}
+
+.lucky-pet[data-form=human][data-state=hello] .lucky-human-tail{animation:lucky-human-tail 1.5s ease-in-out 160ms 1 both}

@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "collection_date": "2026-10-16",
+  "records": 54,
+  "videos": 30,
+  "photos": 24,
+  "media_files": [
+    {
+      "path": "assets/lucky-photo-03-original.heic",
+      "mime": "image/heic",
+      "bytes": 129644,
+      "sha256": "d65de4a4b650d78465afb4df9c469f67e50745f02e310151a50594540ec27775",
+      "role": "retained_original_heic"
+    },
+    {
+      "path": "assets/lucky-photo-03-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 548039,
+      "sha256": "c682c80aa4dbf9a3c88862ba8f66ad1049a8de84583116894f42716c6fdf83de",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-04-original.heic",
+      "mime": "image/heic",
+      "bytes": 63060,
+      "sha256": "400c8c117884060578469f0a580738ed1e6b4ff13f7a6e2337398a673e01f29d",
+      "role": "retained_original_heic"
+    },
+    {
+      "path": "assets/lucky-photo-04-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 376460,
+      "sha256": "fb6b0b9062cddfb8103a9ea03d79b134ccd634580513c3f1680c1f90b4138cea",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-13-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 226577,
+      "sha256": "f0cdcebfe72d30c7b5009aeb36ff6dec08906e5f9c035a70b993b631b360aef5",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-11-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 65651,
+      "sha256": "ef4ba95f6ab14d5da8205e936ccb149232d229393648de821e0e77c5b909ee3f",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-10-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 93930,
+      "sha256": "6266228da5fe3cb80db85a7ec77e10037c65a2f39098747b7d8b52aa8445a068",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-09-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 67445,
+      "sha256": "729b582afd90e6869a51d091c850eb67219ad8e2ae7718fa2c42c46658f2f7ad",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-07-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 41708,
+      "sha256": "ae2bac72467bdc7118c9aa36595c0e1e58893e4b0db80dd297ea588437e2ea64",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-15-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 3389269,
+      "sha256": "4609116ad469c7bd2f1ed4c9373edfddf8a978a071f78c740193b064c8b88482",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-17-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 2108940,
+      "sha256": "f04e42d51b41d593617438609b91186c0c9b7eaf3fa4dcc6b1a5f98842f5f884",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-18-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 2082425,
+      "sha256": "974e940f80793cfa39d9bcde43bd28aaab46183a135991e4a4df99697ba2f24d",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-19-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 4086041,
+      "sha256": "ebf67b1c74c5fa655eae370917b7449be105039a0768db1ab71d8469c5ad66d7",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-20-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 4285118,
+      "sha256": "482938bf37dda94634018ef2e7c5a0869e95d5cb626c2d9bc3278eeb4567171d",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-21-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 4988420,
+      "sha256": "36df34e6785981195e4267fc4c88bfff4c20542a7799c53d5b4626b4ba173a25",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-22-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 957384,
+      "sha256": "4a33b2ed4e290e6d1b90743c00c2f5bfbfd5a524401a8bc143260aeca33cf443",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-23-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 2406204,
+      "sha256": "885aee93005d712938cbcb258a1e2c15f38b782c5834e100a6273dd51520bfe9",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-photo-14-full.jpg",
+      "mime": "image/jpeg",
+      "bytes": 2274976,
+      "sha256": "a94d3da74e5a867bf13b9d7c11405d629588715bf855155f1a9aedc98ae58a59",
+      "role": "higher_pixel_existing_photo"
+    },
+    {
+      "path": "assets/lucky-14.mp4",
+      "mime": "video/mp4",
+      "bytes": 594382,
+      "sha256": "4497438aa4058c6b7db032c88155105b61eef36348ab216117bc72e562c3b8c5",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-14.jpg",
+      "mime": "image/jpeg",
+      "bytes": 38696,
+      "sha256": "071409b987fde35e917e0acd492dd0896fbec513e344d51d3e8366790c3da875",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-14-preview.webp",
+      "mime": "image/webp",
+      "bytes": 11056,
+      "sha256": "65931337fa35f79058f5f913c68593ba15978e7138afa4c8177c740afb3b0585",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-15.mp4",
+      "mime": "video/mp4",
+      "bytes": 390243,
+      "sha256": "95ea7c83795659a96669fdbe384f371cc22323cf1c4672d2606ccbb1ebc2e9aa",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-15.jpg",
+      "mime": "image/jpeg",
+      "bytes": 68518,
+      "sha256": "ab764fa6cc8ba2ccce775f5f96ddb9be5f9c25984503027910ec000d4ceea922",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-15-preview.webp",
+      "mime": "image/webp",
+      "bytes": 22104,
+      "sha256": "c197b85f042aedb40a7872ea01363166fc61570f256d0e8fd14d17295c15aaa3",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-16.mp4",
+      "mime": "video/mp4",
+      "bytes": 924306,
+      "sha256": "7647add21a396c938c66cdc807819942f0fb58ecc7b705a21de7dbfea1204e99",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-16.jpg",
+      "mime": "image/jpeg",
+      "bytes": 130669,
+      "sha256": "b23eed458ac9653eee8516402149e1376daa1ddb823c7271aed893cb7648efad",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-16-preview.webp",
+      "mime": "image/webp",
+      "bytes": 67890,
+      "sha256": "a02c5a662932385b44a916a4d57675f0b6f8d2fbecc4c2c797e2cf51dc2dcf07",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-17.mp4",
+      "mime": "video/mp4",
+      "bytes": 2980274,
+      "sha256": "6d44fef3b55c58a96314519088489d2602e6f96b67964ba3598e27c9f74203f7",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-17.jpg",
+      "mime": "image/jpeg",
+      "bytes": 67374,
+      "sha256": "86c1b1e5864700ae858412f982ef22621e4ce214430fc86c2ffb57ce9540b87d",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-17-preview.webp",
+      "mime": "image/webp",
+      "bytes": 19360,
+      "sha256": "c409ca8a79719578fc18c055cfd7fa0d008ae54d40edf045dbc38e2682688adf",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-18.mp4",
+      "mime": "video/mp4",
+      "bytes": 663807,
+      "sha256": "ab7d98194a3c0d1099def70f95ab5f923501200e56df0cda445d536ce678ede7",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-18.jpg",
+      "mime": "image/jpeg",
+      "bytes": 90770,
+      "sha256": "a7a841203476e4ebf6489ea66d3c0ec7ed63842e8a246ae1ac0940ea6df1edd6",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-18-preview.webp",
+      "mime": "image/webp",
+      "bytes": 29972,
+      "sha256": "70d3e05824e00f6952048d529e0cdd359dd1330248f5d38e8573f30ad04e58bf",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-19.mp4",
+      "mime": "video/mp4",
+      "bytes": 1089472,
+      "sha256": "3289f82284eeedf1296bdd45da546af10f545871714d700636b6273b4fe31b16",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-19.jpg",
+      "mime": "image/jpeg",
+      "bytes": 61879,
+      "sha256": "b762251eef69217325d96790f3b44164dea277eb4637f4eb4e7c64faefa23d0b",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-19-preview.webp",
+      "mime": "image/webp",
+      "bytes": 27568,
+      "sha256": "1c83bb89a1d8902002114cbcc9976b1fe884f08776bd65eef6868215e5af67d8",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-20.mp4",
+      "mime": "video/mp4",
+      "bytes": 1212958,
+      "sha256": "8eb160b903710846d8f3dd6b00079299b67b141720512aeaaca13b58219f2101",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-20.jpg",
+      "mime": "image/jpeg",
+      "bytes": 84204,
+      "sha256": "1d51cc1db22ab95920d9e4233f89ff1e4fc6f6088c09f609d6dac9b94dcef1be",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-20-preview.webp",
+      "mime": "image/webp",
+      "bytes": 25214,
+      "sha256": "4d22a237f07a6acf78f80d37639021b577408f4485a66e6c6760c2c79c5ca2d0",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-21.mp4",
+      "mime": "video/mp4",
+      "bytes": 5671523,
+      "sha256": "054243c897b6bf9ea98d88c633cece37898bbef45db34de78a0e95b5dc8729cf",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-21.jpg",
+      "mime": "image/jpeg",
+      "bytes": 63025,
+      "sha256": "0bda419eb839a958a2a9425e68f985848658fd40c374ae4831736fa82a4a460d",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-21-preview.webp",
+      "mime": "image/webp",
+      "bytes": 19742,
+      "sha256": "79126c2f51978259cc854540bcfcfbb53cf079bf029807157bec072ef422bc59",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-22.mp4",
+      "mime": "video/mp4",
+      "bytes": 1582510,
+      "sha256": "e31050ffdb3dcb19afb62b1484e67e82a20f8dcfb47a473fd7416c36d531c504",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-22.jpg",
+      "mime": "image/jpeg",
+      "bytes": 106352,
+      "sha256": "b0edaf7e8d3fa81173d7e45fbbe6d726881278d42c8db2436dab59bebb4daca0",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-22-preview.webp",
+      "mime": "image/webp",
+      "bytes": 32148,
+      "sha256": "d4878abb87f6dd486249f5998998e93281dea7bbe61ccbe5f4877ab31a3f5490",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-23.mp4",
+      "mime": "video/mp4",
+      "bytes": 1771074,
+      "sha256": "f335a73256fcf64ec150a384970542e7e3c24e525fd3186eeb09f8716b5abed3",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-23.jpg",
+      "mime": "image/jpeg",
+      "bytes": 41688,
+      "sha256": "86a3d0d15b81f513b2ff7a41abe9ed99a680562cbc8bd3ed41e74692b94d6f17",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-23-preview.webp",
+      "mime": "image/webp",
+      "bytes": 12582,
+      "sha256": "f40d10f4f9c98de7c012f77a96e0d28e1e017a27dbbeb065d12da91eca2e73c7",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-24.mp4",
+      "mime": "video/mp4",
+      "bytes": 3616614,
+      "sha256": "5820faf989ff9d4ebb58a97d3a0c6a825b2160b95dee56564beb5753c6cf05cd",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-24.jpg",
+      "mime": "image/jpeg",
+      "bytes": 54773,
+      "sha256": "1c888b978411a685f1097b75d9db59811187de0d47a54b139ca5808b7b6701f5",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-24-preview.webp",
+      "mime": "image/webp",
+      "bytes": 26482,
+      "sha256": "6f73f0cb43bf0af2849ad701cd7fa727f276f178028e242f4c104eff88dcde86",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-25.mp4",
+      "mime": "video/mp4",
+      "bytes": 563076,
+      "sha256": "123d50cc3300b5efa413372ae3c3caa4eef41f7b571ecd3b4298f62bf9358602",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-25.jpg",
+      "mime": "image/jpeg",
+      "bytes": 50789,
+      "sha256": "93663709ff61a57d0e1e6254440894b1e7f0eaf1da620ca200c39a5f30b25213",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-25-preview.webp",
+      "mime": "image/webp",
+      "bytes": 15738,
+      "sha256": "a9bf59188ed5ebc3ebb0918faa961d94d8456be462900152314e7d4114365d41",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-26.mp4",
+      "mime": "video/mp4",
+      "bytes": 2222705,
+      "sha256": "4e6287937a1de981af976bba16552c6ba78a2efd630a38b2d67d7c9c3a15f348",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-26.jpg",
+      "mime": "image/jpeg",
+      "bytes": 78988,
+      "sha256": "fc6103f60393107f3867e08b9bca48cb7d844ffaa4cfaab483a5fceb29e4bf04",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-26-preview.webp",
+      "mime": "image/webp",
+      "bytes": 22758,
+      "sha256": "c4ffadfb709488d705dad2f50a6070742dae7ac4452348e99466e01ffa7116b6",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-27.mp4",
+      "mime": "video/mp4",
+      "bytes": 1653831,
+      "sha256": "fd17f9d14a78733b6480b5c0152d2a7b4042345acdfc7bd03e591745e500ff28",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-27.jpg",
+      "mime": "image/jpeg",
+      "bytes": 44013,
+      "sha256": "650333b6d92b7a69be183b0958bb1342466a1d155a0c26f99287929d6f67d3f5",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-27-preview.webp",
+      "mime": "image/webp",
+      "bytes": 18400,
+      "sha256": "47eb7fd45c14962a6ee95fd7e5150387dbee6232b0adf1644d9c6915073230d8",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-28.mp4",
+      "mime": "video/mp4",
+      "bytes": 2166836,
+      "sha256": "c5542df2b01f882864b0d0beaf9929db69f902cd475ba1f3aab853489c7e4779",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-28.jpg",
+      "mime": "image/jpeg",
+      "bytes": 76743,
+      "sha256": "7fd3ea4dde892819e745a47b7536bb11fb059ad3e00752dc0721f1ea3149f9ae",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-28-preview.webp",
+      "mime": "image/webp",
+      "bytes": 22834,
+      "sha256": "0f6e9b1b8532c35d082a1d31a577fbf261b4346ef5ed9e397e543b28daade9a5",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-29.mp4",
+      "mime": "video/mp4",
+      "bytes": 1247329,
+      "sha256": "04a9027288396f587843ab02c9bb2550714ab5a1c57f2d328bda26434b707f08",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-29.jpg",
+      "mime": "image/jpeg",
+      "bytes": 55438,
+      "sha256": "21bc5530c5c7473532fae7140456f8f65e51293771eb82ae2836f682b8a9b4c9",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-29-preview.webp",
+      "mime": "image/webp",
+      "bytes": 16718,
+      "sha256": "23129b3be56789cb0b7f3d5b2b8c82600f34a43197f8e8b3722586bdcf97d37b",
+      "role": "video_preview"
+    },
+    {
+      "path": "assets/lucky-30.mp4",
+      "mime": "video/mp4",
+      "bytes": 2847773,
+      "sha256": "285bcc4ecc70fb8e22ece28455542059f41c514c9d0af048029d92320df8009b",
+      "role": "new_video"
+    },
+    {
+      "path": "assets/lucky-30.jpg",
+      "mime": "image/jpeg",
+      "bytes": 88318,
+      "sha256": "020ed078c26e50c3d77a8f9dc635758f3bf9639220dd35ad3e9b5dea5fffa223",
+      "role": "video_poster"
+    },
+    {
+      "path": "assets/lucky-30-preview.webp",
+      "mime": "image/webp",
+      "bytes": 26992,
+      "sha256": "21c685491f04e0e4555b5db179f01257e1aab83d4bcc5ef82633e0c4296848bb",
+      "role": "video_preview"
+    }
+  ],
+  "access": "public; explicitly approved by album owner on 2026-10-16"
+}
