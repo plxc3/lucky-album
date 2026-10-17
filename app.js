@@ -1,6 +1,7 @@
-import {catRig, humanRig} from './character-rig.js?v=20261016-2';
-import { site, notes } from './content.js?v=20261016-2';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261016-2';
+import {catRig, humanRig} from './character-rig.js?v=20261017-3';
+import { site, notes } from './content.js?v=20261017-3';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261017-3';
+import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261017-3';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -56,27 +57,8 @@ if (recentNotes.length) journalGroups.push({
   description: '刚刚放进相册的小日子，也在这里留一页。',
   ids: recentNotes.map(note => note.id),
 });
-const growthMoments = [
-  {
-    id: 'lucky-in-the-carrier',
-    label: '01 / 收起小爪',
-    title: '航空箱里的圆圆轮廓',
-    description: '窝在箱内，脸、前爪和身体都收成小小的一团。箱门和垫子留在画面里，成为观察体型的参照。',
-  },
-  {
-    id: 'lucky-holding-a-finger',
-    label: '02 / 靠近你',
-    title: '小爪抱住一根手指',
-    description: '躺在腿上，Lucky 用前爪轻轻抱住手指。手和膝盖让圆脸、爪子与身体的比例更容易看清。',
-  },
-  {
-    id: 'lucky-reaching-toward-the-desk',
-    label: '03 / 伸展身子',
-    title: '把蓬松的身子拉长',
-    description: '后脚踩着坐垫，前爪搭向柜边。从头到尾巴都进入镜头，可以看到长毛下舒展的身形。',
-  },
-];
-const growthNotes = growthMoments.map(moment => notes.find(note => note.id === moment.id)).filter(Boolean);
+const growthNotes = growthThemes.flatMap(theme => theme.ids.map(id => notes.find(note => note.id === id)));
+const growthTimeline = buildCollectionTimeline(notes);
 const journalSequence = journalGroups.flatMap(group => group.ids.map(id => notes.find(note => note.id === id))).filter(Boolean);
 
 function deferOffscreenImages(markup) {
@@ -106,14 +88,55 @@ function mountImages() {
   pending.forEach(img => { img.classList.add('is-image-pending'); observer.observe(img); });
 }
 
+function renderIntakeChart(series) {
+  const W = 720, H = 164, left = 16, right = 16, top = 12, bottom = 12;
+  const plotW = W - left - right, plotH = H - top - bottom;
+  const px = p => left + p.x * plotW;
+  const py = p => top + plotH - p.y * plotH;
+  const line = series.points.map(p => `${px(p).toFixed(1)},${py(p).toFixed(1)}`).join(' ');
+  const area = `${left},${top + plotH} ${line} ${px(series.points.at(-1)).toFixed(1)},${top + plotH}`;
+  // Keep the plot decorative. HTML values below remain readable when a narrow
+  // viewport scales the SVG down or the visitor increases their text size.
+  const grid = [0, 0.5, 1].map(f => {
+    const y = top + plotH - f * plotH;
+    return `<line class="growth-chart-grid" x1="${left}" y1="${y}" x2="${W - right}" y2="${y}"></line>`;
+  }).join('');
+  const dots = series.points.map(p => `<circle class="growth-chart-dot" cx="${px(p).toFixed(1)}" cy="${py(p).toFixed(1)}" r="5"></circle>`).join('');
+  const rows = series.points.map(p => `<tr><th scope="row"><time datetime="${escape(p.date)}"><span class="growth-chart-year">${escape(p.date.slice(0,4))} 年</span><span class="growth-chart-monthday">${escape(p.date.slice(5).replace('-','.'))}</span></time></th><td>${p.added}</td><td><strong>${p.total}</strong></td></tr>`).join('');
+  return `<figure class="growth-intake-chart">
+    <svg viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
+      ${grid}
+      <polygon class="growth-chart-area" points="${area}"></polygon>
+      <polyline class="growth-chart-line" points="${line}"></polyline>
+      ${dots}
+    </svg>
+    <table class="growth-chart-table"><caption>相册一页页添起来 · 单位：条</caption><thead><tr><th scope="col">收录日期</th><th scope="col">本次</th><th scope="col">累计</th></tr></thead><tbody>${rows}</tbody></table>
+    <figcaption>曲线向上表示<strong>累计收录条数</strong>增加，每个节点是一批收录，按批次等距排列。收录日期不等于拍摄日期；目前缺少可靠的体重、身长与拍摄日期，无法绘制 Lucky 的身体成长曲线。</figcaption>
+  </figure>`;
+}
+
+function renderGrowthMoment(note) {
+  const index = growthNotes.indexOf(note);
+  return `<li class="growth-moment"><article><button type="button" class="growth-image-button" data-growth-photo="${index}" aria-label="${note.video ? '播放视频' : '放大照片'}：${escape(note.title)}"><img src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" loading="lazy"><span class="growth-image-hint">${note.video ? `▷ 完整视频 · ${escape(note.duration)}` : '放大看原图 ↗'}</span></button><div class="growth-moment-copy"><span class="growth-moment-label"><time datetime="${note.date}">${dateText(note.date)}</time> 收录</span><h4>${escape(note.title)}</h4><p>${escape(note.description)}</p><a href="#/note/${escape(note.id)}">翻到这篇日记 <span aria-hidden="true">→</span></a></div></article></li>`;
+}
+function renderGrowthTheme(theme) {
+  const records = theme.ids.map(id => notes.find(note => note.id === id));
+  const featured = records.slice(0,3);
+  const remaining = records.slice(3);
+  // Native details keeps every card and diary link in the DOM. Its closed content
+  // has no layout box; deferred images load when opening makes them intersect.
+  const more = remaining.length ? `<details class="growth-theme-more"><summary>展开本主题其余 ${remaining.length} 个片段</summary><ul class="growth-moments">${remaining.map(renderGrowthMoment).join('')}</ul></details>` : '';
+  return `<section class="growth-theme" aria-labelledby="growth-theme-${theme.id}"><header><p class="growth-moment-label">${escape(theme.label)}</p><h3 id="growth-theme-${theme.id}" tabindex="-1">${escape(theme.title)}</h3><p>${escape(theme.description)}</p></header><ul class="growth-moments">${featured.map(renderGrowthMoment).join('')}</ul>${more}</section>`;
+}
+
 function renderGrowth() {
+  const hero = notes.find(note => note.id === 'lucky-fluffy-back');
+  const intake = buildIntakeSeries(notes);
   return `<section class="growth-view" aria-labelledby="growth-title">
-    <header class="growth-hero"><div class="growth-hero-copy"><p class="growth-kicker">LUCKY / LITTLE BY LITTLE</p><h1 id="growth-title">小小一团，<br>慢慢舒展开。</h1><p class="growth-hero-lead">Lucky 是三个月大的长尾母三花。把她蜷着、抱着手指、伸长身子的照片放在一起，看看奶白色长毛里藏着的身形。</p><div class="growth-profile"><span class="growth-profile-mark" aria-hidden="true">✳</span><span>Lucky 的小档案</span><strong>3 个月 · 母三花 · 灰尖长尾</strong></div></div><figure class="growth-hero-photo"><img src="assets/lucky-photo-11-preview.webp" alt="Lucky 背对镜头坐在蓝边白色垫子上，奶白长毛间有烟灰和浅杏斑块" width="720" height="1280"><figcaption>这一身蓬蓬的毛，都属于 Lucky。</figcaption></figure><span class="growth-hero-index" aria-hidden="true">01—03</span></header>
-    <section class="growth-story" aria-labelledby="growth-story-title"><header class="growth-story-heading"><div><p class="growth-kicker">THREE WAYS TO SEE HER</p><h2 id="growth-story-title">同一只 Lucky，三种轮廓</h2></div><p>收起小爪、靠近你、伸长身子。沿着照片里的参照物观察她的身形；这些画面的拍摄先后尚未核实。</p></header><ol class="growth-moments">${growthMoments.map((moment, index) => {
-      const note = growthNotes[index];
-      return `<li class="growth-moment"><article><button type="button" class="growth-image-button" data-growth-photo="${index}" aria-label="查看照片：${escape(moment.title)}"><img src="${escape(note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" loading="lazy"><span class="growth-image-hint">放大看照片 →</span></button><div class="growth-moment-copy"><span class="growth-moment-label">${escape(moment.label)}</span><h3>${escape(moment.title)}</h3><p>${escape(moment.description)}</p></div></article></li>`;
-    }).join('')}</ol></section>
-    <section class="growth-context" aria-labelledby="growth-context-title"><div class="growth-context-icon" aria-hidden="true">✳</div><div><h2 id="growth-context-title">这是一份视觉观察</h2><p>目前没有这些照片的可靠拍摄日期、逐月体重或身长记录。画面的先后是阅读安排，并非已核实的成长时间线；镜头远近和姿势也会影响看起来的大小。有了日期与测量值，才能画出真实的成长曲线。</p></div></section>
+    <header class="growth-hero"><div class="growth-hero-copy"><p class="growth-kicker">LUCKY / LITTLE BY LITTLE</p><h1 id="growth-title">小小一团，<br>满满的日常。</h1><p class="growth-hero-lead">把小爪、长尾和轻快的脚步，一点点收进成长手记。${notes.length} 个真实片段，记下 Lucky 被陪伴、被看见的模样。</p><div class="growth-profile"><span class="growth-profile-mark" aria-hidden="true">✳</span><span>主人提供的小档案</span><strong>3 个月 · 母三花 · 灰尖长尾</strong></div></div><figure class="growth-hero-photo"><button class="growth-cover-button" type="button" data-photo="${notes.indexOf(hero)}" aria-label="放大查看 Lucky 的三花背影"><img src="${hero.previewPhoto || hero.photo}" alt="Lucky 背对镜头坐在蓝边白色垫子上，奶白长毛间有烟灰和浅杏斑块" width="${hero.width}" height="${hero.height}"></button><figcaption>奶白、烟灰和浅杏，都是她的颜色。</figcaption></figure><span class="growth-hero-index" aria-hidden="true">LITTLE MOMENTS / ${notes.length}</span></header>
+    <section class="growth-collection" aria-labelledby="growth-collection-title"><header class="growth-story-heading"><div><p class="growth-kicker">OUR ALBUM KEEPS GROWING</p><h2 id="growth-collection-title">陪她的日子，一页页收好</h2></div><p>${albumCount}。下面按<strong>收录日期</strong>排列，记录相册怎样添页；不代表素材的拍摄先后。</p></header>${renderIntakeChart(intake)}<ol class="growth-collection-list">${growthTimeline.map(batch => `<li><article><div class="growth-collection-date"><span>收录日期</span><time datetime="${batch.date}">${dateText(batch.date)}</time><small>累计 ${batch.total} 条记录</small></div><div class="growth-collection-copy"><h3>${escape(batch.title)}</h3><p>${escape(batch.description)}</p><p class="growth-batch-count">本次 ${batch.items.length} 条 · ${batch.videos} 段视频 · ${batch.photos} 张照片</p><details><summary>翻看本次全部 ${batch.items.length} 条记录</summary><ul>${batch.items.map(note => `<li><a href="#/note/${escape(note.id)}"><span>${escape(note.title)}</span><small>${duration(note)}</small></a></li>`).join('')}</ul></details></div></article></li>`).join('')}</ol></section>
+    <section class="growth-story growth-observations" aria-labelledby="growth-story-title"><header class="growth-story-heading"><div><p class="growth-kicker">WAYS TO REMEMBER HER</p><h2 id="growth-story-title">在这些小事里，看见 Lucky</h2></div><p>${growthThemes.length} 条观察线，把 ${growthNotes.length} 个照片与动作片段放在一起，覆盖相册里的每一条记录。按生活主题翻看，不把不同姿态当作长大的刻度。</p></header><nav class="growth-theme-index" aria-label="选择成长观察主题">${growthThemes.map(theme => `<button type="button" data-growth-jump="growth-theme-${theme.id}">${escape(theme.label.slice(5))}</button>`).join('')}</nav>${growthThemes.map(renderGrowthTheme).join('')}</section>
+    <section class="growth-context" aria-labelledby="growth-context-title"><div class="growth-context-icon" aria-hidden="true">✳</div><div><h2 id="growth-context-title">把看得见的留下，把未知的留白</h2><p>这是一份基于现有影像的成长手记。目前没有可靠的拍摄日期、逐月体重或身长记录；收录日期不等于拍摄日期。镜头远近和姿势会影响看起来的大小，因此这里记录动作、陪伴与日常，不绘制未经测量的成长曲线。</p></div></section>
     <nav class="growth-next" aria-label="继续看 Lucky"><a href="#/notes">翻翻 Lucky 的日记 <span aria-hidden="true">→</span></a><a href="#/">回到小相册 <span aria-hidden="true">→</span></a></nav>
   </section>`;
 }
@@ -339,7 +362,7 @@ function renderCharacter() {
       <figure class="character-human-detail"><a href="assets/lucky-human-sheet.png" target="_blank" rel="noopener" aria-label="打开 Lucky 拟人设定稿原图，可放大查看（新标签页）"><img src="assets/lucky-human-sheet-display.webp" alt="Lucky 拟人设定稿，展示人物正面、背面、三种表情，以及烟灰耳尖和灰尖长尾的细节" width="1536" height="1024" loading="lazy" decoding="async"><span>查看完整设定稿 <span aria-hidden="true">→</span></span></a><figcaption>正反面、三种小表情与耳朵、尾巴细节 · 点击图片查看大图</figcaption></figure>
     </section>
     <section class="character-evolution" aria-labelledby="character-evolution-title"><div class="character-evolution-heading"><p class="character-kicker">LUCKY / BEFORE &amp; AFTER</p><h2 id="character-evolution-title">两种画法，都是 Lucky</h2><p>保留最初的站姿版本，也看看现在毛束更柔软的坐姿小猫。</p></div><div class="character-evolution-grid"><figure class="character-evolution-card"><div class="character-evolution-art"><img src="assets/lucky-pixel-idle-small.png" alt="旧版像素 Lucky：奶白长毛小三花四脚站立，灰尖的长尾巴向上弯起" width="1284" height="1225" loading="lazy"></div><figcaption><span class="character-evolution-tag">原版</span><strong>站着探索</strong><span>明快的像素轮廓，保留第一次画下 Lucky 的样子。</span></figcaption></figure><figure class="character-evolution-card character-evolution-card-new"><div class="character-evolution-art"><img src="assets/lucky-cozy-idle-small.png" alt="新版像素 Lucky：奶白长毛小三花安静坐着，烟灰与浅杏斑块、粉鼻和灰尖长尾巴清楚可见" width="1329" height="1183" loading="lazy"></div><figcaption><span class="character-evolution-tag">新版</span><strong>坐着陪伴</strong><span>用成组的小毛束表现柔软长毛，也让耳朵、爪子和尾巴轻轻动起来。</span></figcaption></figure></div></section>
-    <div class="character-stickers"><div class="character-stickers-heading"><p class="character-kicker">LUCKY / PIXEL MOMENTS</p><h2>Lucky 的像素小表情</h2><p>抬抬爪，再打个小盹。</p></div><div class="character-sticker-grid"><figure><img src="assets/lucky-cozy-hello-small.png" alt="坐着的像素小三花 Lucky 轻轻抬起前爪，奶白长毛和灰尖尾巴都在身旁" loading="lazy"><figcaption>你好呀</figcaption></figure><figure><img src="assets/lucky-cozy-sleep-small.png" alt="闭眼休息的像素小三花 Lucky，奶白长毛和灰尖尾巴围着小小的身体" loading="lazy"><figcaption>困困啦</figcaption></figure></div></div>
+    <div class="character-stickers"><div class="character-stickers-heading"><p class="character-kicker">LUCKY / PIXEL MOMENTS</p><h2>Lucky 的像素小表情</h2><p>抬抬爪，再打个小盹。</p></div><div class="character-sticker-grid"><figure><img src="assets/lucky-cozy-hello-small.png" alt="坐着的像素小三花 Lucky 轻轻抬起前爪，奶白长毛和灰尖尾巴都在身旁" width="512" height="456" loading="lazy"><figcaption>你好呀</figcaption></figure><figure><img src="assets/lucky-cozy-sleep-small.png" alt="闭眼休息的像素小三花 Lucky，奶白长毛和灰尖尾巴围着小小的身体" width="512" height="456" loading="lazy"><figcaption>困困啦</figcaption></figure></div></div>
   </section>`;
 }
 
@@ -443,11 +466,17 @@ function updatePhoto() {
     video.poster = note.photo;
     video.src = note.video;
     video.setAttribute('aria-label', note.alt);
+    video.width = note.width;
+    video.height = note.height;
     image.removeAttribute('src');
   } else {
     image.src = note.photo;
     image.alt = note.alt;
   }
+  // The record already carries its intrinsic size, so the media box can be reserved
+  // before the file decodes instead of snapping to shape underneath the visitor.
+  image.width = note.width;
+  image.height = note.height;
   video.load();
   dialog.querySelector('.lightbox-caption').textContent = note.caption;
   document.querySelector('#media-note-link').href = `#/note/${note.id}`;
@@ -488,6 +517,13 @@ main.addEventListener('click', event => {
   }
   const featureButton = event.target.closest('[data-feature]');
   if (featureButton) { selectCharacterFeature(Number(featureButton.dataset.feature)); return; }
+  const growthJump = event.target.closest('[data-growth-jump]');
+  if (growthJump) {
+    const target = document.getElementById(growthJump.dataset.growthJump);
+    target?.focus({preventScroll:true});
+    target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',block:'start'});
+    return;
+  }
   const journalJump = event.target.closest('[data-journal-jump]');
   if (journalJump) {
     const target = document.getElementById(journalJump.dataset.journalJump);

@@ -1,4 +1,4 @@
-import { notes } from './content.js?v=20261016-2';
+import { notes } from './content.js?v=20261017-3';
 
 const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia?.('(hover: hover) and (pointer: fine)');
@@ -52,7 +52,7 @@ function card(note) {
   const order = selection().indexOf(note);
   const rotation = [-2,1.5,-1,2][order % 4];
   const framing = `style="object-fit:${note.previewFit==='contain'?'contain':'cover'};object-position:${escape(note.previewPosition || 'center')}"`;
-  return `<button type="button" class="sticker-card" data-sticker="${index}" style="--rotation:${rotation}deg" aria-label="${note.video?'播放视频':'查看照片'}：${escape(note.title)}">
+  return `<button type="button" class="sticker-card${note.previewFit==='contain' && note.width>note.height ? ' sticker-landscape' : ''}" data-sticker="${index}" style="--rotation:${rotation}deg" aria-label="${note.video?'播放视频':'查看照片'}：${escape(note.title)}">
     <span class="sticker-image"><img src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" ${framing} loading="lazy" draggable="false">${note.video ? `<video class="sticker-preview" muted playsinline loop preload="none" data-source="${escape(note.video)}" aria-hidden="true" hidden></video><span class="sticker-media-label">视频 · ${escape(note.duration)}</span>` : '<span class="sticker-media-label">照片</span>'}<span class="sticker-sheen" aria-hidden="true"></span></span>
     <span class="sticker-caption"><span class="sticker-number">${number(order+1)}</span><span>${escape(note.title)}</span></span>
   </button>`;
@@ -67,8 +67,14 @@ function bookPage(items,side,pageNumber=page) {
 }
 function cover() {
   const portrait=notes.find(note=>note.id==='lucky-in-the-carrier');
+  // The page header already carries "THE LITTLE ALBUM · 2026"; repeating it on the
+  // cover wasted the line, so it states the real collection span instead.
+  const dates=[...new Set(notes.map(note=>note.date))].sort();
+  const first=dates[0].replace(/-/g,'.');
+  const last=dates.length>1?dates.at(-1).slice(5).replace('-','.'):`${dates[0].slice(5).replace('-','.')}`;
+  const span=dates.length>1?`${first} – ${last}`:first;
   return `<div class="cover-shell"><div class="cover-face"><div class="cover-copy">
-    <p class="cover-edition">THE LITTLE ALBUM · 2026</p><h2 class="cover-title">Lucky<span>的日常</span></h2><p class="cover-description">有 Lucky 的普通日子。</p>
+    <p class="cover-edition">收录 ${span}</p><h2 class="cover-title">Lucky<span>的日常</span></h2><p class="cover-description">有 Lucky 的普通日子。</p>
     <button class="cover-open" type="button" data-book-action="open">翻开相册</button><button class="cover-skip" type="button" data-book-action="skip">跳过翻页动画</button><a class="cover-character-link" href="#/character">认识画里的 Lucky <span aria-hidden="true">→</span></a>
     <p class="cover-count">${number(notes.length)} 个片段 · ${number(videoCount)} 段视频 · ${number(photoCount)} 张照片</p>
     </div><div class="cover-collage" aria-hidden="true"><div class="cover-photo cover-photo-main"><img src="${portrait.photo}" alt="" width="${portrait.width}" height="${portrait.height}" draggable="false"><span>hello, Lucky.</span></div><div class="cover-photo cover-photo-character"><img src="assets/lucky-cozy-idle-small.png" alt="" width="512" height="456" draggable="false"><span>像素 Lucky</span></div></div>
@@ -93,7 +99,7 @@ export function renderAlbum() {
     <div class="book-controls"><button type="button" class="cover-toggle" data-book-action="cover" ${opened?'':'hidden'}>看封面</button><div class="page-controls" ${opened?'':'hidden'}><button type="button" data-book-action="previous" ${page===0?'disabled':''}>上一页</button><span class="page-status" role="status" aria-live="polite">${number(page+1)} / ${number(pages)}</span><button type="button" data-book-action="next" ${page===pages-1?'disabled':''}>下一页</button></div><span class="book-hint" ${opened?'':'hidden'}>点开片段，看大图或视频</span></div>
     <div class="album-progress" aria-hidden="true" ${opened?'':'hidden'}><span style="width:${((page+1)/pages)*100}%"></span></div>
     <a class="character-teaser" href="#/character"><span class="character-teaser-art"><img src="assets/lucky-cozy-hello-small.png" alt="" width="512" height="456" loading="lazy"></span><span class="character-teaser-copy"><strong>画里的 Lucky</strong><span>认识三花小姑娘的像素形象与拟人设定</span></span><span class="character-teaser-arrow" aria-hidden="true">→</span></a>
-    <a class="growth-teaser" href="#/growth"><span class="growth-teaser-index" aria-hidden="true">→</span><span class="growth-teaser-copy"><strong>Lucky 的成长观察</strong><span>照片里的身形、小爪与长尾巴</span></span><span class="growth-teaser-arrow" aria-hidden="true">→</span></a>
+    <a class="growth-teaser" href="#/growth"><span class="growth-teaser-art" aria-hidden="true"><img src="assets/lucky-photo-11-preview.webp" alt="" width="720" height="1280" loading="lazy"></span><span class="growth-teaser-copy"><strong>Lucky 的成长观察</strong><span>${notes.length} 个真实片段，串起小爪、长尾与日常</span></span><span class="growth-teaser-arrow" aria-hidden="true">→</span></a>
   </section>`;
 }
 
