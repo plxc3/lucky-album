@@ -17,7 +17,15 @@ for(const file of files){
   assert(!/chatgpt\.site|\/logout|\/login/.test(text),`Old hosting reference in ${file}`);
   for(const match of text.matchAll(/assets\/[A-Za-z0-9._-]+/g)) references.add(match[0]);
 }
-for(const note of notes) for(const field of ['photo','video','previewPhoto','originalPhoto']) if(note[field]) references.add(note[field]);
+for(const note of notes){
+  for(const field of ['photo','video','previewPhoto','originalPhoto','photo1x']) if(note[field]) references.add(note[field]);
+  // Responsive previews are computed at render time, so the literal-source scan
+  // cannot see them. Check every actual candidate before publishing the site.
+  if(note.previewPhoto){
+    assert(note.previewPhoto.endsWith('.webp'),`Unsupported responsive preview ${note.id}`);
+    references.add(note.previewPhoto.replace(/\.webp$/, '-md.webp'));
+  }
+}
 for(const name of references) assert((await stat(join(root,name))).size>0,`Missing or empty ${name}`);
 const hashes=new Set();
 for(const note of notes){

@@ -690,11 +690,11 @@ export const notes = [
     "photo": "assets/lucky-photo-05.jpg",
     "width": 1280,
     "height": 720,
-    "previewFit": "contain",
+    "previewFit": "cover",
     "alt": "Lucky 仰躺在腿上，前爪抱着一根手指",
     "caption": "被小爪轻轻抱住",
     "previewPhoto": "assets/lucky-photo-05-preview.webp",
-    "previewPosition": "center"
+    "previewPosition": "68% center"
   },
   {
     "id": "lucky-and-the-blue-feather",
@@ -899,6 +899,7 @@ export const notes = [
       "Lucky 仰面躺着，两只前爪举到脸边。一只贴着脸，另一只露出粉色的小爪垫。"
     ],
     "photo": "assets/lucky-photo-03-full.jpg",
+    "photo1x": "assets/lucky-photo-03-full-1x.webp",
     "width": 960,
     "height": 1708,
     "alt": "Lucky 仰面躺着，两只前爪举到脸旁，露出粉色的爪垫",

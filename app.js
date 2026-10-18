@@ -1,7 +1,7 @@
-import {catRig, humanRig} from './character-rig.js?v=20261017-3';
-import { site, notes } from './content.js?v=20261017-3';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261017-3';
-import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261017-3';
+import {catRig, humanRig} from './character-rig.js?v=20261018-1';
+import { site, notes } from './content.js?v=20261018-1';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261018-1';
+import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261018-1';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -64,7 +64,7 @@ const journalSequence = journalGroups.flatMap(group => group.ids.map(id => notes
 function deferOffscreenImages(markup) {
   // This markup is generated here. Assign offscreen sources only near the viewport,
   // rather than letting the browser eagerly fetch several screens of lazy images.
-  return markup.replace(/<img\b[^>]*>/g, tag => tag.includes('loading="lazy"') ? tag.replace(/\bsrc=/, 'data-src=') : tag);
+  return markup.replace(/<img\b[^>]*>/g, tag => tag.includes('loading="lazy"') ? tag.replace(/\b(src|srcset)=/g, 'data-$1=') : tag);
 }
 function mountImages() {
   const pending = [...main.querySelectorAll('img[data-src]')];
@@ -74,6 +74,12 @@ function mountImages() {
     const show = () => img.classList.remove('is-image-pending');
     img.addEventListener('load', show, {once:true});
     img.addEventListener('error', show, {once:true});
+    // Keep responsive candidates dormant too, including inside folded details.
+    // Set the candidates before the fallback so one selection starts the request.
+    if (img.dataset.srcset) {
+      img.srcset = img.dataset.srcset;
+      img.removeAttribute('data-srcset');
+    }
     img.src = img.dataset.src;
     img.removeAttribute('data-src');
     if (img.complete) show();
@@ -117,7 +123,7 @@ function renderIntakeChart(series) {
 
 function renderGrowthMoment(note) {
   const index = growthNotes.indexOf(note);
-  return `<li class="growth-moment"><article><button type="button" class="growth-image-button" data-growth-photo="${index}" aria-label="${note.video ? '播放视频' : '放大照片'}：${escape(note.title)}"><img src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" loading="lazy"><span class="growth-image-hint">${note.video ? `▷ 完整视频 · ${escape(note.duration)}` : '放大看原图 ↗'}</span></button><div class="growth-moment-copy"><span class="growth-moment-label"><time datetime="${note.date}">${dateText(note.date)}</time> 收录</span><h4>${escape(note.title)}</h4><p>${escape(note.description)}</p><a href="#/note/${escape(note.id)}">翻到这篇日记 <span aria-hidden="true">→</span></a></div></article></li>`;
+  return `<li class="growth-moment"><article><button type="button" class="growth-image-button" data-growth-photo="${index}" aria-label="${note.video ? '播放视频' : '放大照片'}：${escape(note.title)}"><img src="${escape(note.previewPhoto || note.photo)}"${note.previewPhoto ? ` srcset="${escape(note.previewPhoto.replace(/\.webp$/, '-md.webp'))} 1x, ${escape(note.previewPhoto)} 2x"` : ''} alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" loading="lazy"><span class="growth-image-hint">${note.video ? `▷ 完整视频 · ${escape(note.duration)}` : '放大看原图 ↗'}</span></button><div class="growth-moment-copy"><span class="growth-moment-label"><time datetime="${note.date}">${dateText(note.date)}</time> 收录</span><h4>${escape(note.title)}</h4><p>${escape(note.description)}</p><a href="#/note/${escape(note.id)}">翻到这篇日记 <span aria-hidden="true">→</span></a></div></article></li>`;
 }
 function renderGrowthTheme(theme) {
   const records = theme.ids.map(id => notes.find(note => note.id === id));
@@ -196,7 +202,7 @@ const characterForms = [
   {
     id:'photo', label:'真实小猫', eyebrow:'LUCKY / THE LITTLE MUSE',
     title:'故事从她开始。', description:'圆圆的眼睛、奶白长毛，还有绕在身边的灰尖长尾。照片里的 Lucky，是每一种画法的起点。',
-    image:realCharacterNote.photo, width:realCharacterNote.width, height:realCharacterNote.height,
+    image:realCharacterNote.photo, small:realCharacterNote.photo1x, width:realCharacterNote.width, height:realCharacterNote.height,
     alt:realCharacterNote.alt, caption:'本猫 Lucky · 真实照片',
   },
   {
@@ -208,7 +214,7 @@ const characterForms = [
   {
     id:'human', label:'猫耳女孩', eyebrow:'LUCKY / HUMAN PORTRAIT',
     title:'换一种模样，还是 Lucky。', description:'猫耳、浅色蓬松长发和完整的灰尖长尾，把小姑娘的神气带进柔和的绘本里。',
-    image:'assets/lucky-human-portrait-display.webp', width:1024, height:1536,
+    image:'assets/lucky-human-portrait-display.webp', small:'assets/lucky-human-portrait-display-1x.webp', width:1024, height:1536,
     alt:'Lucky 的既有绘本风猫耳女孩立绘，奶白长发、暖白外套，完整灰尖长尾在身旁弯起', caption:'猫耳女孩 Lucky · 来自本猫的拟人想象',
   },
 ];
@@ -220,7 +226,7 @@ let characterActionVersion = 0;
 function renderCharacterTransform() {
   return `<section class="character-transform" aria-label="Lucky 的三种模样" data-character-form="cat">
     <div class="character-transform-intro"><p class="character-kicker">ONE LUCKY / THREE LITTLE WORLDS</p><h1 id="character-title">同一只 Lucky，<br>换个模样陪你。</h1><p>从照片里的小三花，到画里的小姑娘。<br>选一种模样，看看那些一直没变的小特征。</p><div class="character-form-tabs" role="tablist" aria-label="选择 Lucky 的模样">${characterForms.map((form,index)=>`<button type="button" role="tab" id="character-form-${form.id}" data-character-form-tab="${index}" aria-controls="character-form-panel" aria-selected="${form.id==='cat'}" tabindex="${form.id==='cat'?0:-1}">${form.label}</button>`).join('')}</div><div class="character-form-copy" aria-live="polite" aria-atomic="true"><p class="character-form-eyebrow">${characterForms[1].eyebrow}</p><h2>${characterForms[1].title}</h2><p class="character-form-description">${characterForms[1].description}</p></div><p class="character-transform-instruction" id="character-transform-help">轻点小猫，见到画里的她。再点女孩，变回小猫。<br>也可以用下面的小动作，和 Lucky 玩一会儿。</p><a class="character-transform-details" href="#character-human-title" data-character-human-jump>翻翻完整拟人设定 <span aria-hidden="true">↓</span></a></div>
-    <div class="character-form-panel" id="character-form-panel" role="tabpanel" aria-labelledby="character-form-cat" tabindex="0"><div class="character-display">${characterForms.map(form=>`<figure class="character-form-figure character-form-figure--${form.id}" data-character-form-slide="${form.id}" data-active="${form.id==='cat'}" aria-hidden="${form.id!=='cat'}"><div class="character-form-art character-rig" data-character="${form.id}">${form.id === 'cat' ? catRig('lucky-hero') : form.id === 'human' ? humanRig('lucky-hero') : `<img src="${form.image}" alt="${escape(form.alt)}" width="${form.width}" height="${form.height}" decoding="async" draggable="false">`}</div><figcaption>${form.caption}</figcaption></figure>`).join('')}<button type="button" class="character-form-hit" data-character-transform-hit aria-label="点击像素小猫，变成猫耳女孩" aria-describedby="character-transform-help"></button><span class="lucky-magic" aria-hidden="true">${[[-62,-82],[55,-90],[-90,-10],[95,8],[-58,72],[62,80]].map(([x,y],i)=>`<i class="lucky-magic-particle" style="--x:${x}px;--y:${y}px;--delay:${i*25}ms">${i%2?'✧':'✦'}</i>`).join('')}</span><span class="character-reaction" aria-hidden="true"></span><span class="character-form-stamp" aria-hidden="true">always<br><i>Lucky.</i></span></div><div class="character-interactions" role="group" aria-label="和画里的 Lucky 互动"><button type="button" data-character-action="pet"><span aria-hidden="true">♡</span> 摸摸</button><button type="button" data-character-action="play"><span aria-hidden="true">✧</span> 逗逗</button><button type="button" data-character-action="rest" aria-pressed="false"><span aria-hidden="true">☾</span> <span data-character-rest-label>休息</span></button></div><p class="character-action-status" role="status" aria-live="polite" aria-atomic="true">摸摸小爪，或逗她玩一会儿。</p></div>
+    <div class="character-form-panel" id="character-form-panel" role="tabpanel" aria-labelledby="character-form-cat" tabindex="0"><div class="character-display">${characterForms.map(form=>`<figure class="character-form-figure character-form-figure--${form.id}" data-character-form-slide="${form.id}" data-active="${form.id==='cat'}" aria-hidden="${form.id!=='cat'}"><div class="character-form-art character-rig" data-character="${form.id}">${form.id === 'cat' ? catRig('lucky-hero') : form.id === 'human' ? humanRig('lucky-hero') : `<img src="${form.image}"${form.small ? ` srcset="${form.small} 1x, ${form.image} 2x"` : ''} alt="${escape(form.alt)}" width="${form.width}" height="${form.height}" decoding="async" draggable="false">`}</div><figcaption>${form.caption}</figcaption></figure>`).join('')}<button type="button" class="character-form-hit" data-character-transform-hit aria-label="点击像素小猫，变成猫耳女孩" aria-describedby="character-transform-help"></button><span class="lucky-magic" aria-hidden="true">${[[-62,-82],[55,-90],[-90,-10],[95,8],[-58,72],[62,80]].map(([x,y],i)=>`<i class="lucky-magic-particle" style="--x:${x}px;--y:${y}px;--delay:${i*25}ms">${i%2?'✧':'✦'}</i>`).join('')}</span><span class="character-reaction" aria-hidden="true"></span><span class="character-form-stamp" aria-hidden="true">always<br><i>Lucky.</i></span></div><div class="character-interactions" role="group" aria-label="和画里的 Lucky 互动"><button type="button" data-character-action="pet"><span aria-hidden="true">♡</span> 摸摸</button><button type="button" data-character-action="play"><span aria-hidden="true">✧</span> 逗逗</button><button type="button" data-character-action="rest" aria-pressed="false"><span aria-hidden="true">☾</span> <span data-character-rest-label>休息</span></button></div><p class="character-action-status" role="status" aria-live="polite" aria-atomic="true">摸摸小爪，或逗她玩一会儿。</p></div>
   </section>`;
 }
 function syncCharacterActions(section) {
@@ -343,6 +349,8 @@ function selectCharacterForm(index, moveFocus = false) {
   };
   const incoming = new Image();
   incoming.src = form.image;
+  if (form.small) incoming.srcset = `${form.small} 1x, ${form.image} 2x`;
+  else incoming.removeAttribute('srcset');
   // The incoming source is ready before movement; a failed image never traps controls.
   const ready = incoming.decode ? incoming.decode().catch(() => {}) : Promise.resolve();
   let started = false;
@@ -358,8 +366,8 @@ function renderCharacter() {
   return `<section class="character-view" aria-labelledby="character-title">
     ${renderCharacterTransform()}
     ${renderFeatureStudy()}
-    <section class="character-human" aria-labelledby="character-human-title"><header class="character-human-heading"><p class="character-kicker">LUCKY / HUMAN PORTRAIT</p><h2 id="character-human-title" tabindex="-1">Lucky 的拟人设定</h2><p>从第二版坐姿小猫出发，想象她成为猫耳小姑娘的模样。</p></header><div class="character-human-sheet"><figure class="character-human-art"><img src="assets/lucky-human-portrait-display.webp" alt="Lucky 的水彩绘本风拟人立绘：奶白蓬松长发的猫耳小姑娘，局部烟灰与浅杏发色、粉色鼻尖，穿暖白外套，完整的蓬松灰尖长尾在身侧弯起" width="1024" height="1536" loading="lazy" decoding="async"><figcaption>拟人立绘 · 灵感来自 Lucky 本猫</figcaption></figure><div class="character-human-notes"><p class="character-human-label">CHARACTER NOTES / 01</p><h3>画里也留着她的样子</h3><ul><li><strong>奶白长毛</strong><span>化作蓬松的浅色头发与柔软外套。</span></li><li><strong>烟灰与浅杏</strong><span>只在耳尖、发束和尾巴上轻轻点染。</span></li><li><strong>圆眼与粉鼻</strong><span>保留 Lucky 仰头看人时的稚气。</span></li><li><strong>灰尖长尾</strong><span>完整地绕在身边，像本猫一样醒目。</span></li></ul><div class="character-human-reference"><p>从照片里来的细节</p><div class="character-human-photos"><figure><img src="assets/lucky-photo-05-preview.webp" alt="真实 Lucky 抱住手指，可以看到圆眼睛与粉色小鼻子" width="1280" height="720" loading="lazy"><figcaption>圆眼睛与粉鼻</figcaption></figure><figure><img src="assets/lucky-photo-11-preview.webp" alt="真实 Lucky 背对镜头坐着，奶白长毛上有烟灰与浅杏斑块" width="720" height="1280" loading="lazy"><figcaption>奶白、烟灰与浅杏</figcaption></figure></div></div></div></div>
-      <figure class="character-human-detail"><a href="assets/lucky-human-sheet.png" target="_blank" rel="noopener" aria-label="打开 Lucky 拟人设定稿原图，可放大查看（新标签页）"><img src="assets/lucky-human-sheet-display.webp" alt="Lucky 拟人设定稿，展示人物正面、背面、三种表情，以及烟灰耳尖和灰尖长尾的细节" width="1536" height="1024" loading="lazy" decoding="async"><span>查看完整设定稿 <span aria-hidden="true">→</span></span></a><figcaption>正反面、三种小表情与耳朵、尾巴细节 · 点击图片查看大图</figcaption></figure>
+    <section class="character-human" aria-labelledby="character-human-title"><header class="character-human-heading"><p class="character-kicker">LUCKY / HUMAN PORTRAIT</p><h2 id="character-human-title" tabindex="-1">Lucky 的拟人设定</h2><p>从第二版坐姿小猫出发，想象她成为猫耳小姑娘的模样。</p></header><div class="character-human-sheet"><figure class="character-human-art"><img src="assets/lucky-human-portrait-display.webp" srcset="assets/lucky-human-portrait-display-1x.webp 1x, assets/lucky-human-portrait-display.webp 2x" alt="Lucky 的水彩绘本风拟人立绘：奶白蓬松长发的猫耳小姑娘，局部烟灰与浅杏发色、粉色鼻尖，穿暖白外套，完整的蓬松灰尖长尾在身侧弯起" width="1024" height="1536" loading="lazy" decoding="async"><figcaption>拟人立绘 · 灵感来自 Lucky 本猫</figcaption></figure><div class="character-human-notes"><p class="character-human-label">CHARACTER NOTES / 01</p><h3>画里也留着她的样子</h3><ul><li><strong>奶白长毛</strong><span>化作蓬松的浅色头发与柔软外套。</span></li><li><strong>烟灰与浅杏</strong><span>只在耳尖、发束和尾巴上轻轻点染。</span></li><li><strong>圆眼与粉鼻</strong><span>保留 Lucky 仰头看人时的稚气。</span></li><li><strong>灰尖长尾</strong><span>完整地绕在身边，像本猫一样醒目。</span></li></ul><div class="character-human-reference"><p>从照片里来的细节</p><div class="character-human-photos"><figure><img src="assets/lucky-photo-05-preview.webp" alt="真实 Lucky 抱住手指，可以看到圆眼睛与粉色小鼻子" width="1280" height="720" loading="lazy"><figcaption>圆眼睛与粉鼻</figcaption></figure><figure><img src="assets/lucky-photo-11-preview.webp" alt="真实 Lucky 背对镜头坐着，奶白长毛上有烟灰与浅杏斑块" width="720" height="1280" loading="lazy"><figcaption>奶白、烟灰与浅杏</figcaption></figure></div></div></div></div>
+      <figure class="character-human-detail"><a href="assets/lucky-human-sheet.png" target="_blank" rel="noopener" aria-label="打开 Lucky 拟人设定稿原图，可放大查看（新标签页）"><img src="assets/lucky-human-sheet-display.webp" srcset="assets/lucky-human-sheet-display-1x.webp 1x, assets/lucky-human-sheet-display.webp 2x" alt="Lucky 拟人设定稿，展示人物正面、背面、三种表情，以及烟灰耳尖和灰尖长尾的细节" width="1536" height="1024" loading="lazy" decoding="async"><span>查看完整设定稿 <span aria-hidden="true">→</span></span></a><figcaption>正反面、三种小表情与耳朵、尾巴细节 · 点击图片查看大图</figcaption></figure>
     </section>
     <section class="character-evolution" aria-labelledby="character-evolution-title"><div class="character-evolution-heading"><p class="character-kicker">LUCKY / BEFORE &amp; AFTER</p><h2 id="character-evolution-title">两种画法，都是 Lucky</h2><p>保留最初的站姿版本，也看看现在毛束更柔软的坐姿小猫。</p></div><div class="character-evolution-grid"><figure class="character-evolution-card"><div class="character-evolution-art"><img src="assets/lucky-pixel-idle-small.png" alt="旧版像素 Lucky：奶白长毛小三花四脚站立，灰尖的长尾巴向上弯起" width="1284" height="1225" loading="lazy"></div><figcaption><span class="character-evolution-tag">原版</span><strong>站着探索</strong><span>明快的像素轮廓，保留第一次画下 Lucky 的样子。</span></figcaption></figure><figure class="character-evolution-card character-evolution-card-new"><div class="character-evolution-art"><img src="assets/lucky-cozy-idle-small.png" alt="新版像素 Lucky：奶白长毛小三花安静坐着，烟灰与浅杏斑块、粉鼻和灰尖长尾巴清楚可见" width="1329" height="1183" loading="lazy"></div><figcaption><span class="character-evolution-tag">新版</span><strong>坐着陪伴</strong><span>用成组的小毛束表现柔软长毛，也让耳朵、爪子和尾巴轻轻动起来。</span></figcaption></figure></div></section>
     <div class="character-stickers"><div class="character-stickers-heading"><p class="character-kicker">LUCKY / PIXEL MOMENTS</p><h2>Lucky 的像素小表情</h2><p>抬抬爪，再打个小盹。</p></div><div class="character-sticker-grid"><figure><img src="assets/lucky-cozy-hello-small.png" alt="坐着的像素小三花 Lucky 轻轻抬起前爪，奶白长毛和灰尖尾巴都在身旁" width="512" height="456" loading="lazy"><figcaption>你好呀</figcaption></figure><figure><img src="assets/lucky-cozy-sleep-small.png" alt="闭眼休息的像素小三花 Lucky，奶白长毛和灰尖尾巴围着小小的身体" width="512" height="456" loading="lazy"><figcaption>困困啦</figcaption></figure></div></div>
@@ -397,7 +405,12 @@ function render() {
   }
   if (route.startsWith('/note/') && lastRoute !== '/notes' && !lastRoute.startsWith('/note/')) journalReturnNoteId = '';
   document.querySelectorAll('[data-nav]').forEach(link => link.removeAttribute('aria-current'));
-  document.querySelector(`[data-nav="${route === '/' || route === '/photos' ? 'photos' : route === '/character' ? 'character' : route === '/growth' ? 'growth' : 'notes'}"]`).setAttribute('aria-current', 'page');
+  const navKey = route === '/' || route === '/photos' ? 'photos' : route === '/character' ? 'character' : route === '/growth' ? 'growth' : 'notes';
+  const navLink = document.querySelector(`[data-nav="${navKey}"]`);
+  navLink.setAttribute('aria-current', 'page');
+  // Focus lands on <main> after every route change, so the region needs a name or a
+  // screen reader just announces "main" with no idea which view it landed in.
+  if (navLink) main.setAttribute('aria-label', navLink.textContent.replace(/\s+/g, ' ').trim());
   if (route === '/' || route === '/photos') {
     document.title = `${site.title} · 贴纸小相册`;
     main.innerHTML = renderAlbum();
@@ -462,6 +475,8 @@ function updatePhoto() {
   video.removeAttribute('src');
   video.hidden = !note.video;
   image.hidden = !!note.video;
+  // The full-size viewer always uses the complete original, at every density.
+  image.removeAttribute('srcset');
   if (note.video) {
     video.poster = note.photo;
     video.src = note.video;

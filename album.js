@@ -1,4 +1,4 @@
-import { notes } from './content.js?v=20261017-3';
+import { notes } from './content.js?v=20261018-1';
 
 const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia?.('(hover: hover) and (pointer: fine)');
@@ -53,7 +53,7 @@ function card(note) {
   const rotation = [-2,1.5,-1,2][order % 4];
   const framing = `style="object-fit:${note.previewFit==='contain'?'contain':'cover'};object-position:${escape(note.previewPosition || 'center')}"`;
   return `<button type="button" class="sticker-card${note.previewFit==='contain' && note.width>note.height ? ' sticker-landscape' : ''}" data-sticker="${index}" style="--rotation:${rotation}deg" aria-label="${note.video?'播放视频':'查看照片'}：${escape(note.title)}">
-    <span class="sticker-image"><img src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" ${framing} loading="lazy" draggable="false">${note.video ? `<video class="sticker-preview" muted playsinline loop preload="none" data-source="${escape(note.video)}" aria-hidden="true" hidden></video><span class="sticker-media-label">视频 · ${escape(note.duration)}</span>` : '<span class="sticker-media-label">照片</span>'}<span class="sticker-sheen" aria-hidden="true"></span></span>
+    <span class="sticker-image"><img src="${escape(note.previewPhoto || note.photo)}"${note.previewPhoto ? ` srcset="${escape(note.previewPhoto.replace(/\.webp$/, '-md.webp'))} 1x, ${escape(note.previewPhoto)} 2x"` : ''} alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" ${framing} loading="lazy" draggable="false">${note.video ? `<video class="sticker-preview" muted playsinline loop preload="none" data-source="${escape(note.video)}" aria-hidden="true" hidden></video><span class="sticker-media-label">视频 · ${escape(note.duration)}</span>` : '<span class="sticker-media-label">照片</span>'}<span class="sticker-sheen" aria-hidden="true"></span></span>
     <span class="sticker-caption"><span class="sticker-number">${number(order+1)}</span><span>${escape(note.title)}</span></span>
   </button>`;
 }
