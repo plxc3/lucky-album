@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-19-1",
+  "version": "2026-10-19-2",
   "status": "experimental-baseline",
   "models": {
     "cat": "v005",
@@ -141,6 +141,11 @@
       "path": "motion-policy.js",
       "bytes": 4923,
       "sha256": "71a718696129e0c87df9c0c26b5a802025aad91a701e949b8f615cef67dc3b27"
+    },
+    {
+      "path": "player.js",
+      "bytes": 14717,
+      "sha256": "80b250572d060f5c6f24e6023c98b687dd9c1652a30327952b20ee8f2a70c3bc"
     },
     {
       "path": "sdk/core.js",

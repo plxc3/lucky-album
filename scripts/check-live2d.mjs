@@ -37,6 +37,9 @@ for(const kind of ['cat','girl']){
 }
 const html=await readFile(join(base,'index.html'),'utf8');
 const runtime=await readFile(join(base,'runtime.js'),'utf8');
+const player=await readFile(join(base,'player.js'),'utf8');
+assert(!/runtime-status|save-playback-report|\/Users\/|\/workspace\//.test(player),'Private backend/source reference in shared player');
+assert(player.includes('export async function createLuckyPlayer'),'Missing shared player entry');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length);
 for(const m of runtime.matchAll(/\$\('([^']+)'\)/g))assert(ids.includes(m[1]),`Runtime references missing #${m[1]}`);

@@ -3,7 +3,7 @@
 const STORAGE_KEY = 'lucky-web-pet-v1';
 // The floating pet renders at 136 CSS pixels or smaller; the full-size images
 // remain available for the character page and original artwork comparison.
-import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261019-1';
+import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261019-2';
 const rigMarkup = catRig('lucky-pet', true);
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { /* Storage can be unavailable. */ }
@@ -71,6 +71,26 @@ let audioContext;
 const preloadedSprites = new Map();
 let petImagesActive = false;
 
+// The floating companion shares the real runtime with the main transformation stage.
+let petPlayer,petPlayerTask,petFormBusy=false,petQueuedForm;
+let petLongPressTimer,petLongConsumed=false;
+const petCanvasHost=document.createElement('span');petCanvasHost.className='lucky-pet-canvas';petCanvasHost.setAttribute('aria-hidden','true');
+character.prepend(petCanvasHost);pet.dataset.modelState='loading';
+async function ensurePetPlayer(){
+  if(petPlayerTask)return petPlayerTask;
+  petPlayerTask=(async()=>{
+    try{
+      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261019-2');
+      const player=await createLuckyPlayer({host:petCanvasHost,initialForm:petForm==='human'?'girl':'cat',maxDpr:1.5,
+        onMotion:({group})=>{pet.dataset.motion=group;},
+        onError:()=>{pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时停下了，先用图画陪着你。');}});
+      petPlayer=player;pet.dataset.modelState='ready';player.setSuspended(pet.hidden);
+      clearTimeout(blinkTimer);clearTimeout(blinkEndTimer);pet.classList.remove('is-blinking');
+      isSleeping=false;pet.dataset.state='idle';sleepButton.textContent='☾ 安静陪伴';return player;
+    }catch{pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时没有加载，当前显示静态参考。');return null;}
+  })();return petPlayerTask;
+}
+
 function activatePetImages() {
   if (petImagesActive) return;
   petImagesActive = true;
@@ -90,7 +110,7 @@ function preloadSprite(state) {
 function scheduleBlink() {
   clearTimeout(blinkTimer);
   clearTimeout(blinkEndTimer);
-  if (petForm === 'human' || pet.hidden || document.hidden || reducedMotion?.matches || pet.dataset.state === 'sleep') return;
+  if (pet.dataset.modelState || petForm === 'human' || pet.hidden || document.hidden || reducedMotion?.matches || pet.dataset.state === 'sleep') return;
   blinkTimer = window.setTimeout(() => {
     if (pet.hidden || document.hidden || pet.dataset.state === 'sleep') return;
     pet.classList.add('is-blinking');
@@ -144,6 +164,7 @@ function showBubble(message, duration = 2400) {
 }
 
 function setState(state, duration = 0) {
+  if(petPlayer?.ready){clearTimeout(actionTimer);pet.dataset.state='idle';return;}
   clearTimeout(actionTimer);
   clearTimeout(blinkTimer);
   clearTimeout(blinkEndTimer);
@@ -193,9 +214,9 @@ function applyPetForm(form) {
   petForm = form === 'human' ? 'human' : 'cat';
   pet.dataset.form = petForm;
   pet.setAttribute('aria-label', `Lucky 网页桌宠，${petForm === 'cat' ? '奶白长毛三花小猫' : '猫耳女孩拟人形态'}`);
-  pet.querySelector('[data-pet-action=pet]').textContent = petForm === 'human' ? '♡ 点头打招呼' : '♡ 摸摸 Lucky';
-  pet.querySelector('[data-pet-action=play]').textContent = petForm === 'human' ? '✦ 轻轻抬手回应' : '✦ 一起玩';
-  sleepButton.textContent = isSleeping ? '☀ 叫醒 Lucky' : petForm === 'human' ? '☾ 休息一下' : '☾ 去睡觉';
+  pet.querySelector('[data-pet-action=pet]').textContent = petForm === 'human' ? '♡ 轻轻回应' : '♡ 摸摸 Lucky';
+  pet.querySelector('[data-pet-action=play]').textContent = petForm === 'human' ? '✦ 一起玩' : '✦ 一起玩';
+  sleepButton.textContent = petPlayer?.ready ? '☾ 安静陪伴' : '☾ 休息一下';
   character.setAttribute('aria-label', `点击${petForm === 'cat' ? '小猫 Lucky，变成猫耳女孩' : '猫耳女孩 Lucky，变回小猫'}；可拖动或用方向键移动`);
   if (!pet.hidden) activatePetImages();
   setState(isSleeping ? 'sleep' : 'idle');
@@ -211,56 +232,34 @@ function stopFormTransition() {
   character.removeAttribute('aria-busy');
 }
 
-function setPetForm(form, announce = false) {
-  const nextForm = form === 'human' ? 'human' : 'cat';
-  if (nextForm === petForm && pet.dataset.form && !formTransitionTarget) return;
-  stopFormTransition();
-  const announceForm = () => {
-    showBubble(petForm === 'human' ? '变身啦，再点我变回小猫 ✧' : '毛茸茸的小猫回来啦 ♡');
-    save();
-  };
-  if (!announce || reducedMotion?.matches || pet.hidden || nextForm === petForm) {
-    applyPetForm(nextForm);
-    if (announce) announceForm();
-    return;
-  }
-  closeMenu();
-  setState('idle');
-  formTransitionTarget = nextForm;
-  pet.dataset.targetForm = nextForm;
-  pet.dataset.transition = 'prepare';
-  pet.classList.add('is-transforming');
-  character.setAttribute('aria-busy', 'true');
-  const after = (delay, callback) => {
-    const timer = window.setTimeout(()=>{
-      formTransitionTimers.delete(timer);
-      callback();
-    },delay);
-    formTransitionTimers.add(timer);
-  };
-  // Give the current figure a brief anticipation, crossfade once, then settle.
-  // Neither form is repeatedly swapped and focus stays on the same button.
-  after(220,()=>{
-    pet.dataset.transition = 'handoff';
-    applyPetForm(nextForm);
-    announceForm();
-  });
-  after(600,()=>{pet.dataset.transition = 'settle';});
-  after(1040,()=>{stopFormTransition();scheduleBlink();});
+async function setPetForm(form,announce=false){
+  const next=form==='human'?'human':'cat';
+  if(petFormBusy){petQueuedForm={form:next,announce};return;}
+  if(next===petForm&&pet.dataset.form)return;
+  petFormBusy=true;character.setAttribute('aria-busy','true');closeMenu();stopFormTransition();character.setAttribute('aria-busy','true');
+  try{
+    const player=!pet.hidden||petPlayer?await ensurePetPlayer():null;
+    if(player?.ready)await player.switchTo(next==='human'?'girl':'cat',reducedMotion?.matches||pet.hidden);
+    applyPetForm(next);
+    if(announce){showBubble(petForm==='human'?'变成画里的她，长按摸摸 ♡':'小猫回来啦，长按摸摸 ♡');save();}
+  }catch{showBubble('另一个模样暂时没有加载好，保留现在的她。');}
+  finally{petFormBusy=false;character.removeAttribute('aria-busy');const queued=petQueuedForm;petQueuedForm=null;if(queued)void setPetForm(queued.form,queued.announce);}
 }
 window.addEventListener('lucky:character-form', event => {
   if (['cat','human'].includes(event.detail?.form)) setPetForm(event.detail.form, true);
 });
 
 function toggleSleep() {
+  if(petPlayer?.ready){isSleeping=false;petPlayer.play('Quiet','manual');showBubble('放慢一点，安静陪着你。');return;}
   isSleeping = !isSleeping;
-  sleepButton.textContent = isSleeping ? '☀ 叫醒 Lucky' : petForm === 'human' ? '☾ 休息一下' : '☾ 去睡觉';
+  sleepButton.textContent = petPlayer?.ready ? '☾ 安静陪伴' : '☾ 休息一下';
   setState(isSleeping ? 'sleep' : 'hello', isSleeping ? 0 : 1500);
   showBubble(isSleeping ? petForm === 'human' ? '在这里休息一会儿，晚安 ☾' : '呼噜……晚安呀 ☾' : '醒啦，又能陪你啦 ♡');
   if (!isSleeping) chirp();
 }
 
 function petLucky() {
+  if(petPlayer?.ready){if(petPlayer.play('Touch','manual')){showBubble('收到啦，轻轻回应你一下 ♡');chirp();}return;}
   if (isSleeping) {
     toggleSleep();
     return;
@@ -271,6 +270,7 @@ function petLucky() {
 }
 
 function playLucky() {
+  if(petPlayer?.ready){if(petPlayer.play('Play','manual')){showBubble('一起玩一会儿 ✧');chirp();}return;}
   if (isSleeping) toggleSleep();
   setState('play', 2900);
   showBubble(petForm === 'human' ? '抬起手，回应你一下 ✦' : '来玩呀！尾巴都摇起来啦 ✦', 2900);
@@ -282,6 +282,7 @@ function showPet() {
   revealedForCurrentView = true;
   pet.hidden = false;
   launcher.hidden = true;
+  petPlayer?.setSuspended(false);void ensurePetPlayer();
   activatePetImages();
   setState(isSleeping ? 'sleep' : 'idle');
   setPosition(hasCustomPosition && Number.isFinite(position.x) ? position.x : defaultX(),
@@ -300,6 +301,7 @@ function hidePet() {
   bubble.hidden = true;
   petVisible = false;
   pet.hidden = true;
+  clearTimeout(petLongPressTimer);petPlayer?.setSuspended(true);
   launcher.hidden = false;
   launcher.focus({ preventScroll: true });
   save();
@@ -321,7 +323,8 @@ function syncRouteVisibility(reset = false) {
   pet.hidden = !petVisible || (compactView && !revealedForCurrentView);
   launcher.hidden = !pet.hidden;
   if (pet.hidden) closeMenu();
-  else activatePetImages();
+  else {activatePetImages();void ensurePetPlayer();}
+  petPlayer?.setSuspended(pet.hidden);
   scheduleBlink();
 }
 syncRouteVisibility();
@@ -329,14 +332,16 @@ setPetForm(petForm);
 window.addEventListener('hashchange', () => syncRouteVisibility(true));
 
 launcher.addEventListener('click', showPet);
-character.addEventListener('click', () => {
-  if (suppressClick) { suppressClick = false; return; }
+character.addEventListener('click', event => {
+  if ((event.detail>0||event.pointerType)&&suppressClick) { suppressClick = false; return; }
+  if(petFormBusy)return;
   if (pet.classList.contains('is-transforming')) return;
   isSleeping = false; sleepButton.textContent = '☾ 去睡觉';
   setPetForm(petForm === 'cat' ? 'human' : 'cat', true);
 });
 character.addEventListener('pointerenter', event => {
   if (event.pointerType === 'touch' || isSleeping || !menu.hidden || activePointer) return;
+  if(petPlayer?.ready){petPlayer.play('Greet','hover');return;}
   setState('hello', 1800);
 });
 character.addEventListener('keydown', (event) => {
@@ -348,19 +353,21 @@ character.addEventListener('keydown', (event) => {
   setPosition(position.x + dx, position.y + dy, true);
 });
 character.addEventListener('pointerdown', (event) => {
-  if (event.button !== 0) return;
+  if (event.button !== 0||!event.isPrimary||petFormBusy) return;
+  clearTimeout(petLongPressTimer);suppressClick=false;petLongConsumed=false;petPlayer?.recordUserInput();
   activePointer = {
     id: event.pointerId, startX: event.clientX, startY: event.clientY,
     x: position.x, y: position.y, dragged: false
   };
   character.setPointerCapture?.(event.pointerId);
+  const current=activePointer;petLongPressTimer=setTimeout(()=>{if(activePointer!==current||current.dragged)return;petLongConsumed=true;suppressClick=true;petLucky();},600);
 });
 character.addEventListener('pointermove', (event) => {
   if (!activePointer || event.pointerId !== activePointer.id) return;
   const dx = event.clientX - activePointer.startX;
   const dy = event.clientY - activePointer.startY;
   if (!activePointer.dragged && Math.hypot(dx, dy) < 7) return;
-  activePointer.dragged = true;
+  clearTimeout(petLongPressTimer);activePointer.dragged = true;
   closeMenu();
   pet.classList.add('lucky-pet-dragging');
   setPosition(activePointer.x + dx, activePointer.y + dy);
@@ -368,6 +375,8 @@ character.addEventListener('pointermove', (event) => {
 });
 function finishDrag(event) {
   if (!activePointer || event.pointerId !== activePointer.id) return;
+  clearTimeout(petLongPressTimer);
+  if(petLongConsumed)suppressClick=true;
   if (activePointer.dragged) {
     suppressClick = true;
     hasCustomPosition = true;
@@ -379,6 +388,8 @@ function finishDrag(event) {
 }
 character.addEventListener('pointerup', finishDrag);
 character.addEventListener('pointercancel', finishDrag);
+character.addEventListener('lostpointercapture',finishDrag);
+character.addEventListener('contextmenu',event=>{if(petLongConsumed)event.preventDefault();});
 
 menuToggle.addEventListener('click', () => {
   menu.hidden = !menu.hidden;
