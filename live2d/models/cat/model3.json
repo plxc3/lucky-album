@@ -1,0 +1,52 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "Lucky-cat-BASE-responsive-mesh-v005.moc3",
+    "Textures": [
+      "Lucky-cat-BASE-responsive-mesh-v005.2048/texture_00.png"
+    ],
+    "DisplayInfo": "Lucky-cat-BASE-responsive-mesh-v005.cdi3.json",
+    "Motions": {
+      "Idle": [
+        {
+          "File": "motions/cat-idle.motion3.json"
+        }
+      ],
+      "Touch": [
+        {
+          "File": "motions/cat-touch.motion3.json"
+        }
+      ],
+      "Play": [
+        {
+          "File": "motions/cat-play.motion3.json"
+        }
+      ],
+      "Greet": [
+        {
+          "File": "motions/cat-greet.motion3.json"
+        }
+      ],
+      "Curious": [
+        {
+          "File": "motions/cat-curious.motion3.json"
+        }
+      ],
+      "DoubleResponse": [
+        {
+          "File": "motions/cat-double-response.motion3.json"
+        }
+      ],
+      "Quiet": [
+        {
+          "File": "motions/cat-quiet.motion3.json"
+        }
+      ],
+      "Settle": [
+        {
+          "File": "motions/cat-settle.motion3.json"
+        }
+      ]
+    }
+  }
+}

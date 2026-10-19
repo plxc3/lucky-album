@@ -1,0 +1,60 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamLuckyEar",
+			"GroupId": "",
+			"Name": "Lucky ear twitch"
+		},
+		{
+			"Id": "ParamLuckyTail",
+			"GroupId": "",
+			"Name": "Lucky tail sway"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "",
+			"Name": "Lucky gentle breathing"
+		},
+		{
+			"Id": "ParamLuckyResponse",
+			"GroupId": "",
+			"Name": "Lucky paw curl"
+		}
+	],
+	"ParameterGroups": [],
+	"Parts": [
+		{
+			"Id": "G_Tail",
+			"Name": "G_Tail"
+		},
+		{
+			"Id": "G_Body",
+			"Name": "G_Body"
+		},
+		{
+			"Id": "G_Legs",
+			"Name": "G_Legs"
+		},
+		{
+			"Id": "G_Head",
+			"Name": "G_Head"
+		},
+		{
+			"Id": "G_Ears",
+			"Name": "G_Ears"
+		},
+		{
+			"Id": "G_EyeL",
+			"Name": "G_EyeL"
+		},
+		{
+			"Id": "G_EyeR",
+			"Name": "G_EyeR"
+		},
+		{
+			"Id": "G_Face",
+			"Name": "G_Face"
+		}
+	]
+}

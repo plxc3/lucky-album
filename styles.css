@@ -249,3 +249,50 @@
 .noscript-note{max-width:34rem;margin:48px auto;padding:28px 30px;border:1px solid #d5c8a7;border-radius:6px;background:#fffaf0;color:#314d3f}
 .noscript-note h1{font-family:Georgia,"Lucky Album Serif","Songti SC",serif;font-size:1.6rem;font-weight:500;margin:0 0 12px}
 .noscript-note p{margin:0;line-height:1.7;font-size:.9375rem}
+.character-companion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  max-width: 980px;
+  margin: 0 auto 48px;
+  padding: 24px clamp(20px, 4vw, 36px);
+  border: 1px solid #d8ceba;
+  border-radius: 5px;
+  background: #f2f0e4;
+  color: #365040;
+}
+.character-companion-copy { flex: 1 1 22rem; min-width: 0; }
+.character-companion h2 {
+  margin: 0 0 8px;
+  font: 400 1.3rem/1.55 Georgia, "Lucky Album Serif", "Songti SC", serif;
+  overflow-wrap: anywhere;
+}
+.character-companion h2 span { color: #77715c; font-size: .85em; }
+.character-companion p { margin: 0; color: #626858; font-size: .875rem; line-height: 1.85; overflow-wrap: anywhere; }
+.character-companion-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #365642;
+  border-radius: 3px;
+  background: #365642;
+  color: #fff8e8;
+  font-size: .875rem;
+  line-height: 1.65;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.character-companion-link span { flex-shrink: 0; color: #e6ce95; }
+.character-companion-link:hover { background: #294735; }
+.character-companion-link:focus-visible { outline: 2px solid #496b50; outline-offset: 4px; }
+@media (max-width: 640px) {
+  .character-companion { margin-bottom: 36px; padding: 21px 18px; gap: 17px; }
+  .character-companion-link { justify-content: flex-start; }
+}

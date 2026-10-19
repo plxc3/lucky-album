@@ -1,0 +1,62 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamBreath",
+			"GroupId": "",
+			"Name": "Lucky breathing"
+		},
+		{
+			"Id": "ParamLuckyResponse",
+			"GroupId": "",
+			"Name": "Lucky coordinated ear tail hand response"
+		}
+	],
+	"ParameterGroups": [],
+	"Parts": [
+		{
+			"Id": "G_Tail",
+			"Name": "G_Tail"
+		},
+		{
+			"Id": "G_HairBack",
+			"Name": "G_HairBack"
+		},
+		{
+			"Id": "G_LegsBoots",
+			"Name": "G_LegsBoots"
+		},
+		{
+			"Id": "G_Dress",
+			"Name": "G_Dress"
+		},
+		{
+			"Id": "G_Ears",
+			"Name": "G_Ears"
+		},
+		{
+			"Id": "G_Face",
+			"Name": "G_Face"
+		},
+		{
+			"Id": "G_Coat",
+			"Name": "G_Coat"
+		},
+		{
+			"Id": "G_HandsArms",
+			"Name": "G_HandsArms"
+		},
+		{
+			"Id": "G_EyeL",
+			"Name": "G_EyeL"
+		},
+		{
+			"Id": "G_EyeR",
+			"Name": "G_EyeR"
+		},
+		{
+			"Id": "G_HairFront",
+			"Name": "G_HairFront"
+		}
+	]
+}

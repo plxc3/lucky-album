@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Lucky 的双形态动态体验：轻点小猫和猫耳女孩变身，长按摸摸，让她陪你待一会儿。">
+  <title>Lucky · 两种陪伴</title>
+  <link rel="stylesheet" href="./style.css">
+  <noscript><style>#reference[hidden]{display:block}</style></noscript>
+</head>
+<body>
+  <main class="workbench" aria-labelledby="title">
+    <header class="intro">
+      <a class="back-link" href="../#/character"><span aria-hidden="true">←</span> 回到 Lucky 的相册</a>
+      <p class="eyebrow">LUCKY / A LITTLE COMPANY</p>
+      <h1 id="title">同一个 Lucky，<br>两种陪伴。</h1>
+      <p class="description">轻点她，换一个模样陪你；长按约半秒，轻轻摸摸。<br>不用着急，安静待一会儿，她也会有小回应。</p>
+    </header>
+    <section class="model-study" aria-label="Lucky 双形态动态体验">
+      <div class="stage" id="stage" data-mode="reference">
+        <p class="stage-label" id="form-label">正在准备小小的陪伴</p>
+        <button class="character" id="character" type="button" aria-label="Lucky 小猫，点击切换为猫耳女孩" aria-describedby="character-hint">
+          <img hidden class="reference" id="reference" src="../assets/lucky-cozy-idle-small.png" alt="Lucky 坐姿三花形象" width="480" height="560" decoding="async">
+          <span class="canvas-host" id="canvas-host" aria-hidden="true"></span>
+        </button>
+        <p class="character-hint" id="character-hint">轻点变身 · 长按摸摸</p>
+      </div>
+      <div class="model-caption">
+        <div><h2 id="model-name">Lucky 小猫</h2><p id="prototype-label">动态形象 · 体验中</p></div>
+        <span class="state-badge" id="runtime-badge">准备中</span>
+      </div>
+      <div class="actions" aria-label="和 Lucky 互动">
+        <button type="button" data-motion-group="Idle" disabled>自然待机</button>
+        <button type="button" data-motion-group="Touch" disabled>摸摸</button>
+        <button type="button" data-motion-group="Play" disabled>逗逗</button>
+        <button type="button" data-motion-group="Greet" disabled>打招呼</button>
+        <button type="button" data-motion-group="Curious" disabled>好奇回应</button>
+        <button type="button" data-motion-group="DoubleResponse" disabled>两次回应</button>
+        <button type="button" data-motion-group="Quiet" disabled>安静陪伴</button>
+        <button type="button" data-motion-group="Settle" disabled>回到中性</button>
+      </div>
+      <p class="runtime-message" id="runtime-message" role="status" aria-live="polite" aria-atomic="true">正在为你准备动态形象…</p>
+    </section>
+    <aside class="companionship" aria-labelledby="companion-title">
+      <p class="section-number" aria-hidden="true">01 / 陪你一会儿</p>
+      <h2 id="companion-title">一点点回应，<br>也很可爱。</h2>
+      <p>从 Lucky 的三花斑块，到女孩的猫耳与长尾，都是同一份陪伴的延续。</p>
+      <p class="study-note"><span class="tiny-dot" aria-hidden="true"></span>这是还在生长的体验版。已经能轻柔呼吸和回应；眨眼与独立手势仍在制作。</p>
+      <dl class="status-list"><div><dt>此刻的 Lucky</dt><dd id="motion-status">正在准备</dd></div></dl>
+      <button class="pause-button" id="pause" type="button" aria-pressed="false" disabled>暂停播放</button>
+      <p class="small-note">没有声音。开启“减少动态”时，保留静止形象。键盘聚焦角色后，按 Enter 或空格也能变身。</p>
+    </aside>
+    <noscript><p class="noscript">JavaScript 未启用，当前显示 Lucky 的静态参考。启用后可以切换形态、播放动作。</p></noscript>
+    <footer><span>LUCKY / 有你在的日常</span><a href="./licenses.html">使用动态形象即同意组件使用条款</a></footer>
+  </main>
+  <script type="module" src="./runtime.js"></script>
+</body>
+</html>

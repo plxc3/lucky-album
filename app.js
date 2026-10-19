@@ -1,7 +1,7 @@
-import {catRig, humanRig} from './character-rig.js?v=20261018-1';
-import { site, notes } from './content.js?v=20261018-1';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261018-1';
-import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261018-1';
+import {catRig, humanRig} from './character-rig.js?v=20261019-1';
+import { site, notes } from './content.js?v=20261019-1';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261019-1';
+import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261019-1';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -365,6 +365,10 @@ characterMotion.addEventListener('change', () => {
 function renderCharacter() {
   return `<section class="character-view" aria-labelledby="character-title">
     ${renderCharacterTransform()}
+    <section class="character-companion" aria-labelledby="character-companion-title">
+      <div class="character-companion-copy"><h2 id="character-companion-title">动态陪伴 <span>· 体验中</span></h2><p>已经能轻柔呼吸和回应；眨眼与独立手势仍在制作。</p></div>
+      <a class="character-companion-link" href="live2d/?form=girl">和画里的 Lucky 打个招呼 <span aria-hidden="true">↗</span></a>
+    </section>
     ${renderFeatureStudy()}
     <section class="character-human" aria-labelledby="character-human-title"><header class="character-human-heading"><p class="character-kicker">LUCKY / HUMAN PORTRAIT</p><h2 id="character-human-title" tabindex="-1">Lucky 的拟人设定</h2><p>从第二版坐姿小猫出发，想象她成为猫耳小姑娘的模样。</p></header><div class="character-human-sheet"><figure class="character-human-art"><img src="assets/lucky-human-portrait-display.webp" srcset="assets/lucky-human-portrait-display-1x.webp 1x, assets/lucky-human-portrait-display.webp 2x" alt="Lucky 的水彩绘本风拟人立绘：奶白蓬松长发的猫耳小姑娘，局部烟灰与浅杏发色、粉色鼻尖，穿暖白外套，完整的蓬松灰尖长尾在身侧弯起" width="1024" height="1536" loading="lazy" decoding="async"><figcaption>拟人立绘 · 灵感来自 Lucky 本猫</figcaption></figure><div class="character-human-notes"><p class="character-human-label">CHARACTER NOTES / 01</p><h3>画里也留着她的样子</h3><ul><li><strong>奶白长毛</strong><span>化作蓬松的浅色头发与柔软外套。</span></li><li><strong>烟灰与浅杏</strong><span>只在耳尖、发束和尾巴上轻轻点染。</span></li><li><strong>圆眼与粉鼻</strong><span>保留 Lucky 仰头看人时的稚气。</span></li><li><strong>灰尖长尾</strong><span>完整地绕在身边，像本猫一样醒目。</span></li></ul><div class="character-human-reference"><p>从照片里来的细节</p><div class="character-human-photos"><figure><img src="assets/lucky-photo-05-preview.webp" alt="真实 Lucky 抱住手指，可以看到圆眼睛与粉色小鼻子" width="1280" height="720" loading="lazy"><figcaption>圆眼睛与粉鼻</figcaption></figure><figure><img src="assets/lucky-photo-11-preview.webp" alt="真实 Lucky 背对镜头坐着，奶白长毛上有烟灰与浅杏斑块" width="720" height="1280" loading="lazy"><figcaption>奶白、烟灰与浅杏</figcaption></figure></div></div></div></div>
       <figure class="character-human-detail"><a href="assets/lucky-human-sheet.png" target="_blank" rel="noopener" aria-label="打开 Lucky 拟人设定稿原图，可放大查看（新标签页）"><img src="assets/lucky-human-sheet-display.webp" srcset="assets/lucky-human-sheet-display-1x.webp 1x, assets/lucky-human-sheet-display.webp 2x" alt="Lucky 拟人设定稿，展示人物正面、背面、三种表情，以及烟灰耳尖和灰尖长尾的细节" width="1536" height="1024" loading="lazy" decoding="async"><span>查看完整设定稿 <span aria-hidden="true">→</span></span></a><figcaption>正反面、三种小表情与耳朵、尾巴细节 · 点击图片查看大图</figcaption></figure>

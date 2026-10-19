@@ -1,0 +1,78 @@
+{
+  "Version": 3,
+  "Meta": {
+    "Duration": 1.8,
+    "Fps": 30,
+    "Loop": false,
+    "AreBeziersRestricted": true,
+    "FadeInTime": 0.8,
+    "FadeOutTime": 0.28,
+    "CurveCount": 4,
+    "TotalSegmentCount": 4,
+    "TotalPointCount": 16,
+    "UserDataCount": 0,
+    "TotalUserDataSize": 0
+  },
+  "Curves": [
+    {
+      "Target": "Parameter",
+      "Id": "ParamLuckyEar",
+      "Segments": [
+        0,
+        0,
+        1,
+        0.6,
+        0,
+        1.2,
+        0,
+        1.8,
+        0
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Id": "ParamLuckyTail",
+      "Segments": [
+        0,
+        0,
+        1,
+        0.6,
+        0,
+        1.2,
+        0,
+        1.8,
+        0
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Id": "ParamBreath",
+      "Segments": [
+        0,
+        0,
+        1,
+        0.6,
+        0,
+        1.2,
+        0,
+        1.8,
+        0
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Id": "ParamLuckyResponse",
+      "Segments": [
+        0,
+        0,
+        1,
+        0.6,
+        0,
+        1.2,
+        0,
+        1.8,
+        0
+      ]
+    }
+  ]
+}

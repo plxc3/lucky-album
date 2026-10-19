@@ -1,0 +1,221 @@
+{
+  "version": "2026-10-19-1",
+  "status": "experimental-baseline",
+  "models": {
+    "cat": "v005",
+    "girl": "v010"
+  },
+  "sdk": {
+    "core": "6.0.1",
+    "coreSource": "https://cubism.live2d.com/sdk-web/core/06/live2dcubismcore.min.js",
+    "framework": "5-r.5",
+    "frameworkCommit": "198a3769c26ca3d7b600e932590433badd392edd"
+  },
+  "files": [
+    {
+      "path": "model-checks.js",
+      "bytes": 2070,
+      "sha256": "9908f2379cb3246d5a9cfa1e1da008cafe953f1669f2da8d59ea649e79baa545"
+    },
+    {
+      "path": "models/cat/Lucky-cat-BASE-responsive-mesh-v005.2048/texture_00.png",
+      "bytes": 409456,
+      "sha256": "93e1815fdf6cf16e9be3a994d753324fb48ad80205b33cf803b292914536a9c7"
+    },
+    {
+      "path": "models/cat/Lucky-cat-BASE-responsive-mesh-v005.cdi3.json",
+      "bytes": 799,
+      "sha256": "a993c56d51a9d979b3e07656332409de32685cb9eb73b255d04f21061a6f6ad7"
+    },
+    {
+      "path": "models/cat/Lucky-cat-BASE-responsive-mesh-v005.moc3",
+      "bytes": 136320,
+      "sha256": "c8e6e10780d60135731e4123cdcd0c5243fcac507c3778d94573ecb3f8835ca1"
+    },
+    {
+      "path": "models/cat/model3.json",
+      "bytes": 1077,
+      "sha256": "221e6b1e3b21b7c7eb8acecabb7862f3d3437facd2c7f81f7d232ebb8ab92251"
+    },
+    {
+      "path": "models/cat/motions/cat-curious.motion3.json",
+      "bytes": 2864,
+      "sha256": "d6d75edcfb6e5f06126b0cd957fb13b5558ee62b4c5d096810e44f53b0e40cba"
+    },
+    {
+      "path": "models/cat/motions/cat-double-response.motion3.json",
+      "bytes": 3153,
+      "sha256": "ac25710dbfe29f0ef8da3fd0a9b9cb1be0debdf21f232a7c3036927cfb495dd5"
+    },
+    {
+      "path": "models/cat/motions/cat-greet.motion3.json",
+      "bytes": 2327,
+      "sha256": "2a2f5d50080c15c7dac000bd2cebfa83830129215608ad8ae752a9d78747bc5a"
+    },
+    {
+      "path": "models/cat/motions/cat-idle.motion3.json",
+      "bytes": 2700,
+      "sha256": "ccc621326b1fee16d498bb346dceed40704bf032376cbb7582c6d5e3946d452f"
+    },
+    {
+      "path": "models/cat/motions/cat-play.motion3.json",
+      "bytes": 3047,
+      "sha256": "730da59bdd8d9a2c9bc4686396398f51b7d7e2e91b79bf1f8dccee375503bb44"
+    },
+    {
+      "path": "models/cat/motions/cat-quiet.motion3.json",
+      "bytes": 1914,
+      "sha256": "d085cd394ea90a6143e291cf4055f5a8e643652ef976d69a0637ccd4eca413e8"
+    },
+    {
+      "path": "models/cat/motions/cat-settle.motion3.json",
+      "bytes": 1134,
+      "sha256": "76ad449eede96dc74a16fe0aa362eaa6d01de6b03b7a33cb0645bb33abfabf3e"
+    },
+    {
+      "path": "models/cat/motions/cat-touch.motion3.json",
+      "bytes": 2434,
+      "sha256": "65c7d10f09819c0025d43e0f313c7dd4a0395654126ac612af77a9c1c16b5720"
+    },
+    {
+      "path": "models/girl/Lucky-girl-BASE-coordinated-v010.2048/texture_00.png",
+      "bytes": 1981502,
+      "sha256": "f55779b18fa16b0729906f6b7f26b0bc55bd9902a36ca4734246c45bdb19da59"
+    },
+    {
+      "path": "models/girl/Lucky-girl-BASE-coordinated-v010.cdi3.json",
+      "bytes": 836,
+      "sha256": "09c3a012e785d5440a2a6ec99d1ebe39b0fddb3c73de72f6ba6de2ae25099990"
+    },
+    {
+      "path": "models/girl/Lucky-girl-BASE-coordinated-v010.moc3",
+      "bytes": 224192,
+      "sha256": "a695c78ee84c8d7eace521bf86e3b9523849fa1004e55731fdd6f8076ed211df"
+    },
+    {
+      "path": "models/girl/model3.json",
+      "bytes": 1076,
+      "sha256": "f0e24878ebe655897c39fdba484fb04b664c395668841617b4d4a49007e0cd3f"
+    },
+    {
+      "path": "models/girl/motions/girl-curious.motion3.json",
+      "bytes": 1573,
+      "sha256": "10bca6184ce01c3cbaf4130499bd59cfc16e148a1498ec82c1f7ed33e682b90b"
+    },
+    {
+      "path": "models/girl/motions/girl-double-response.motion3.json",
+      "bytes": 1679,
+      "sha256": "4797c72a334c6e8719e9c59288b0f8595290669e8a98b7992cb4e7f6c51c8d45"
+    },
+    {
+      "path": "models/girl/motions/girl-greet.motion3.json",
+      "bytes": 1243,
+      "sha256": "9e96e88475cca2505f7a84297d80d5a077005ab8d234d9aa31f312758489c00e"
+    },
+    {
+      "path": "models/girl/motions/girl-idle.motion3.json",
+      "bytes": 1507,
+      "sha256": "ca2e339328050e3f2550ff73ec9035a3390ebe21a77f1e20e6e0f06e8ffbb4b5"
+    },
+    {
+      "path": "models/girl/motions/girl-play.motion3.json",
+      "bytes": 1770,
+      "sha256": "2784b233f27b279cf2d082cb46a4cda23026fa5c5bd74b2d2dfe10ff023785f5"
+    },
+    {
+      "path": "models/girl/motions/girl-quiet.motion3.json",
+      "bytes": 1058,
+      "sha256": "5d0fdf305fdb4799818db319186e78270ad571a1cf4e5a7658dd3ca058af6cc3"
+    },
+    {
+      "path": "models/girl/motions/girl-settle.motion3.json",
+      "bytes": 726,
+      "sha256": "45e4013f7a3625a453f11496b699f62479af539fd01b53f71f0b1cda5f1b92a2"
+    },
+    {
+      "path": "models/girl/motions/girl-touch.motion3.json",
+      "bytes": 1269,
+      "sha256": "7ea2956b4ecf331a2b7261e656ea636077bced4fc01def0a4f2b6e162a890e45"
+    },
+    {
+      "path": "motion-policy.js",
+      "bytes": 4923,
+      "sha256": "71a718696129e0c87df9c0c26b5a802025aad91a701e949b8f615cef67dc3b27"
+    },
+    {
+      "path": "sdk/core.js",
+      "bytes": 228042,
+      "sha256": "8741f739779b5d5210872bd3d7d99f0f1e56e6c87409e7d26d6bb4b80aa1ef47"
+    },
+    {
+      "path": "sdk/framework.js",
+      "bytes": 367670,
+      "sha256": "ab2485b84970f0cbbfe199ea16d93056b952112e2cad96ef669199e3db61b5b0"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcalphablend.frag",
+      "bytes": 2189,
+      "sha256": "855b247f02042a808a41e282ee4d7de7cc4533abeb5032b4ab8fe84f7dec107f"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrccolorblend.frag",
+      "bytes": 7525,
+      "sha256": "01d4bf6a14b4a738976e9a538767a21da0defa8816f3845a7df08a7713327538"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrccopy.frag",
+      "bytes": 429,
+      "sha256": "15c67a4ec3adda4c849aff2a8319a3f6aceef8a84d5e5e1f3fb7fd9cd681193c"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcmaskinvertedpremultipliedalpha.frag",
+      "bytes": 1051,
+      "sha256": "1005cff8113de587cf1c0e295288d04d85f0f4ebc223684c8340e017fd8fc788"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcmaskpremultipliedalpha.frag",
+      "bytes": 1043,
+      "sha256": "f84ff615393d26ea6ab7c28747803db6472524c92567c0ad01e8225fbab36a3b"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcpremultipliedalpha.frag",
+      "bytes": 747,
+      "sha256": "c93abe215357cc782a25fc4ef20f5fe1f34e2cc193ee23d763b56b81fae5fce1"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcpremultipliedalphablend.frag",
+      "bytes": 2038,
+      "sha256": "2155076275199a2946959838391dfb856e9d1db91b6ca3abd19ed70d4ff27e15"
+    },
+    {
+      "path": "sdk/shaders/fragshadersrcsetupmask.frag",
+      "bytes": 736,
+      "sha256": "3cccc0b68a56cfbf4bd4841b0a759431dd159812c38dc280981ba633fa0afe7a"
+    },
+    {
+      "path": "sdk/shaders/vertshadersrc.vert",
+      "bytes": 465,
+      "sha256": "291ed3f35f71f1e71e6df33fb055f009a8a9b36ee664f74f24f6cefef0c4029b"
+    },
+    {
+      "path": "sdk/shaders/vertshadersrcblend.vert",
+      "bytes": 738,
+      "sha256": "2589837bd7a6a550a1c3af41b4fa776011e6e71f2531320fa39afcb83b209bf4"
+    },
+    {
+      "path": "sdk/shaders/vertshadersrccopy.vert",
+      "bytes": 392,
+      "sha256": "b7bc4ba7517f405af4812ac47d99bc2b633c99f463c1224029556b00e8dff3cf"
+    },
+    {
+      "path": "sdk/shaders/vertshadersrcmasked.vert",
+      "bytes": 559,
+      "sha256": "6704a9df2e6d3ee5176c72fca4ba59358ba4827a07054b1e0a72a3c574e281fd"
+    },
+    {
+      "path": "sdk/shaders/vertshadersrcsetupmask.vert",
+      "bytes": 536,
+      "sha256": "649aad2f6c0af55a7a4adcf33dbf78937ef9d77ed6ba917fd716176adce25afe"
+    }
+  ]
+}

@@ -6,6 +6,14 @@ Lucky 的照片、日记、视频和会互动的网页形象，沿用原有相�
 
 2026-10-16 主人明确选择 GitHub Pages 公开托管：网站与仓库素材可公开访问，不设密码。旧 GPT 站点不再作为本项目的发布目标。
 
+## 双形态 Live2D 体验 · 2026-10-19
+
+角色页新增“动态陪伴 · 体验中”，打开同站的 [真实动态女孩](https://plxc3.github.io/lucky-album/live2d/?form=girl)。该体验使用本项目的 Lucky 猫 v005 与女孩 v010 MOC3，由官方 Cubism Web SDK 渲染；轻点角色本身往返变身，长按 600ms 摸摸。两种形态各有 8 组动作，支持悬停招呼、间隔待机回应、手动暂停、隐藏标签页自动暂停及减少动态。主相册原有插画、浮宠、照片与日记继续沿用。
+
+这是公开体验版。动作幅度较轻，女孩的微点头、耳尾与手部由同一回应参数协调；闭眼、口型、独立挥手和完整物理仍未完成，源画 alpha 与部分边界仍需改善，不能称为最终成品。新猫眼 v007 实验没有发布。运行库与模型按访问需要加载，主相册不会预先下载 Live2D SDK。
+
+公开目录仅含运行时 MOC3、纹理、动作和 SDK 组件，不含 CMO3、PSD、Editor／codec、私密授权记录。SDK 版本和字节摘要见 `live2d/distribution.json`，使用条件见 [组件许可页](live2d/licenses.html)。打包检查运行 `node scripts/check-live2d.mjs`；页面须在项目子路径下进行真实浏览器验证。
+
 ## 本次内容
 
 - 54 条独立记录：30 段视频、24 张照片。新增 17 段已核对的 Lucky 家庭视频；身份未确认的其他猫咪素材暂不收录。
@@ -52,6 +60,6 @@ GitHub Pages 沿用本仓库 `main` 分支根目录发布，`.nojekyll` 让文�
 - `MEDIA_20261016.json`：本轮 69 个媒体文件的字节长度与 SHA-256。
 - `QUALITY.md`：本轮验证范围及限制。
 
-变换使用准备、柔和交接和落定三个阶段：主角色约 980ms，浮动角色约 1040ms。点击角色本身触发，保留键盘与减少动态支持。抬爪按 SVG 坐标尺度调整，缩到桌宠尺寸仍可见；先去除原部件轮廓，再叠加局部动作，减少重影。当前是既有插画的分层交互，尚未接入真实 Cubism 模型。字体为 Noto Serif CJK SC 子集，许可保存在 `assets/lucky-album-serif-LICENSE.txt`。
+变换使用准备、柔和交接和落定三个阶段：主角色约 980ms，浮动角色约 1040ms。点击角色本身触发，保留键盘与减少动态支持。抬爪按 SVG 坐标尺度调整，缩到桌宠尺寸仍可见；先去除原部件轮廓，再叠加局部动作，减少重影。主相册这部分是既有插画的分层交互；另有上述真实 Cubism 体验入口。字体为 Noto Serif CJK SC 子集，许可保存在 `assets/lucky-album-serif-LICENSE.txt`。
 
-动效节奏参考主人提供的 [Takayu Motion Reference](https://motion-reference.takayustudio.jp/)。另阅读 [live2d-widget](https://github.com/stevenjoezhang/live2d-widget)、[l2d-widget（原 oh-my-live2d）](https://github.com/hacxy/l2d-widget)、[oneko.js](https://github.com/adryd325/oneko.js) 等作者仓库，借鉴动作状态与切换生命周期。本次没有拷入它们的代码或第三方模型，也没有增加动画依赖。Lucky 自有 Live2D 模型制作源包另存于维护工作区，完成网格、参数绑定和真实导出验证后再接入。
+动效节奏参考主人提供的 [Takayu Motion Reference](https://motion-reference.takayustudio.jp/)。另阅读 [live2d-widget](https://github.com/stevenjoezhang/live2d-widget)、[l2d-widget（原 oh-my-live2d）](https://github.com/hacxy/l2d-widget)、[oneko.js](https://github.com/adryd325/oneko.js) 等作者仓库，借鉴动作状态与切换生命周期。本次没有拷入它们的代码或第三方模型，也没有增加动画依赖。Lucky 自有 Live2D 制作源包另存于维护工作区；上述体验版公开官方导出的 baseline 运行文件，制作工程继续保留本地。

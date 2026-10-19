@@ -3,7 +3,7 @@
 const STORAGE_KEY = 'lucky-web-pet-v1';
 // The floating pet renders at 136 CSS pixels or smaller; the full-size images
 // remain available for the character page and original artwork comparison.
-import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261018-1';
+import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261019-1';
 const rigMarkup = catRig('lucky-pet', true);
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { /* Storage can be unavailable. */ }

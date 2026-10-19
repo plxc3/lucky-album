@@ -3,11 +3,12 @@ import {readFile,stat} from 'node:fs/promises';
 import {dirname,join,resolve,extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.mp4':'video/mp4','.woff2':'font/woff2','.heic':'image/heic','.json':'application/json','.txt':'text/plain; charset=utf-8'};
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.mp4':'video/mp4','.woff2':'font/woff2','.heic':'image/heic','.json':'application/json','.txt':'text/plain; charset=utf-8','.frag':'text/plain; charset=utf-8','.vert':'text/plain; charset=utf-8'};
 http.createServer(async(req,res)=>{
   const url=new URL(req.url,'http://127.0.0.1:4180');
   if(!url.pathname.startsWith('/lucky-album/')){res.writeHead(302,{Location:'/lucky-album/'});res.end();return;}
-  const local=decodeURIComponent(url.pathname.slice('/lucky-album/'.length))||'index.html';
+  const relative=decodeURIComponent(url.pathname.slice('/lucky-album/'.length));
+  const local=relative.endsWith('/')?relative+'index.html':relative||'index.html';
   const path=resolve(root,local);
   if(!path.startsWith(root+'/')||local.split('/').some(p=>p.startsWith('.'))){res.writeHead(404);res.end();return;}
   try{

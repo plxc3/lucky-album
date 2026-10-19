@@ -1,0 +1,52 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "Lucky-girl-BASE-coordinated-v010.moc3",
+    "Textures": [
+      "Lucky-girl-BASE-coordinated-v010.2048/texture_00.png"
+    ],
+    "DisplayInfo": "Lucky-girl-BASE-coordinated-v010.cdi3.json",
+    "Motions": {
+      "Idle": [
+        {
+          "File": "motions/girl-idle.motion3.json"
+        }
+      ],
+      "Touch": [
+        {
+          "File": "motions/girl-touch.motion3.json"
+        }
+      ],
+      "Play": [
+        {
+          "File": "motions/girl-play.motion3.json"
+        }
+      ],
+      "Greet": [
+        {
+          "File": "motions/girl-greet.motion3.json"
+        }
+      ],
+      "Curious": [
+        {
+          "File": "motions/girl-curious.motion3.json"
+        }
+      ],
+      "DoubleResponse": [
+        {
+          "File": "motions/girl-double-response.motion3.json"
+        }
+      ],
+      "Quiet": [
+        {
+          "File": "motions/girl-quiet.motion3.json"
+        }
+      ],
+      "Settle": [
+        {
+          "File": "motions/girl-settle.motion3.json"
+        }
+      ]
+    }
+  }
+}

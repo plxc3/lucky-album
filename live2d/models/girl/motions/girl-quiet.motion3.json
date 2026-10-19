@@ -1,0 +1,69 @@
+{
+  "Version": 3,
+  "Meta": {
+    "Duration": 7.1,
+    "Fps": 30,
+    "Loop": false,
+    "AreBeziersRestricted": true,
+    "FadeInTime": 0.32,
+    "FadeOutTime": 0.4,
+    "CurveCount": 2,
+    "TotalSegmentCount": 5,
+    "TotalPointCount": 17,
+    "UserDataCount": 0,
+    "TotalUserDataSize": 0
+  },
+  "Curves": [
+    {
+      "Target": "Parameter",
+      "Id": "ParamBreath",
+      "Segments": [
+        0,
+        0,
+        1,
+        1.0166666667,
+        0,
+        2.0333333333,
+        0.74,
+        3.05,
+        0.74,
+        1,
+        4.2333333333,
+        0.74,
+        5.4166666667,
+        0,
+        6.6,
+        0,
+        1,
+        6.7666666667,
+        0,
+        6.9333333333,
+        0,
+        7.1,
+        0
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Id": "ParamLuckyResponse",
+      "Segments": [
+        0,
+        0,
+        1,
+        2.2,
+        0,
+        4.4,
+        0,
+        6.6,
+        0,
+        1,
+        6.7666666667,
+        0,
+        6.9333333333,
+        0,
+        7.1,
+        0
+      ]
+    }
+  ]
+}
