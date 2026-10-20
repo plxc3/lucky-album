@@ -3,7 +3,7 @@
 const STORAGE_KEY = 'lucky-web-pet-v1';
 // The floating pet renders at 136 CSS pixels or smaller; the full-size images
 // remain available for the character page and original artwork comparison.
-import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261020-1';
+import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261020-2';
 const rigMarkup = catRig('lucky-pet', true);
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { /* Storage can be unavailable. */ }
@@ -88,7 +88,7 @@ async function ensurePetPlayer(){
   const task=(async()=>{
     let candidate;
     try{
-      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-1');
+      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-2');
       if(abort.signal.aborted)return null;
       const player=candidate=await createLuckyPlayer({host:petCanvasHost,signal:abort.signal,initialForm:petForm==='human'?'girl':'cat',maxDpr:1.5,
         onMotion:({group})=>{pet.dataset.motion=group;},

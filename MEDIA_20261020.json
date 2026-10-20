@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "collection_date": "2026-10-20",
+  "added_records": 2,
+  "records": 56,
+  "videos": 32,
+  "photos": 24,
+  "notes": "Original sources retained privately. H264/AAC packet payloads and timing preserved by remux; list images are derivatives, not new records.",
+  "media_files": [
+    {
+      "path": "assets/lucky-31.mp4",
+      "role": "complete_video",
+      "bytes": 18366930,
+      "sha256": "a31debaa62f148fa9548256ad23c52f2477d6d45c8d6040cbe97300c6f13afc5"
+    },
+    {
+      "path": "assets/lucky-31.jpg",
+      "role": "video_poster",
+      "bytes": 183645,
+      "sha256": "79c67502b3b26eb436dc9dd7a7d7a8d917fcf00a93b06bf4470726e78a44c198"
+    },
+    {
+      "path": "assets/lucky-31-preview.webp",
+      "role": "light_preview",
+      "bytes": 30052,
+      "sha256": "cd6fcf52f0890456850eabf3d4e11a4da70bcfcd7d799d5c482707054402b57a"
+    },
+    {
+      "path": "assets/lucky-31-preview-md.webp",
+      "role": "light_preview_1x",
+      "bytes": 10802,
+      "sha256": "eadb1ebe7b03447afbf4f1129ee0f464008e68ed35948b33ace71766c9cf9689"
+    },
+    {
+      "path": "assets/lucky-32.mp4",
+      "role": "complete_video",
+      "bytes": 20362756,
+      "sha256": "ff18c967f824287f37c65b6e53eb3959a0ce9c5b7b8a73d98c6bc4cfa753fae2"
+    },
+    {
+      "path": "assets/lucky-32.jpg",
+      "role": "video_poster",
+      "bytes": 101992,
+      "sha256": "fbc0d823fbf1b7811f75d7a1ab7334078ab24688211a78ea12ef36167a778e89"
+    },
+    {
+      "path": "assets/lucky-32-preview.webp",
+      "role": "light_preview",
+      "bytes": 12576,
+      "sha256": "ec649fabde3c31ec868fe09de6964dd83ac274cbb264bfd256501b464d22fa08"
+    },
+    {
+      "path": "assets/lucky-32-preview-md.webp",
+      "role": "light_preview_1x",
+      "bytes": 4356,
+      "sha256": "ec37da68013b36cc5137ad3d9f861222434f1eb4025e47f6e8ee1f486b4712a4"
+    }
+  ]
+}

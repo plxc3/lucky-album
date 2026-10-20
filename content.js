@@ -22,6 +22,44 @@ const previewPositions = {
   'lucky-hiding-the-face': '50% 35%',
 };
 export const notes = [
+{
+  "id": "lucky-with-the-pink-toy",
+  "date": "2026-10-20",
+  "title": "粉色玩具和小脚步",
+  "description": "低头碰一碰粉色玩具，再挪动小脚步。",
+  "paragraphs": [
+    "门槛旁，Lucky 低头碰着粉色的小玩具，珠串也留在画面里。她抬起小脸向前走，奶白长毛间的烟灰与浅杏斑块、蓬松的灰尖长尾一起进入镜头。"
+  ],
+  "photo": "assets/lucky-31.jpg",
+  "video": "assets/lucky-31.mp4",
+  "duration": "00:11",
+  "width": 1080,
+  "height": 1920,
+  "alt": "Lucky 在门槛和木地板旁低头碰粉色玩具，随后向前走，灰尖长尾在身后",
+  "caption": "粉色玩具和小脚步",
+  "previewPhoto": "assets/lucky-31-preview.webp",
+  "previewFit": "contain",
+  "previewPosition": "center"
+},
+{
+  "id": "lucky-beside-the-brown-door",
+  "date": "2026-10-20",
+  "title": "棕色门边的小身影",
+  "description": "在门边抬头看看，再转身走开。",
+  "paragraphs": [
+    "棕色门旁，Lucky 停在门框边，抬起头看看。随后她转过身，沿着门口走动；镜头保留了她和门框、地面的完整位置关系。"
+  ],
+  "photo": "assets/lucky-32.jpg",
+  "video": "assets/lucky-32.mp4",
+  "duration": "00:12",
+  "width": 1080,
+  "height": 1920,
+  "alt": "奶白长毛三花 Lucky 在棕色门框旁抬头张望，随后转身走动",
+  "caption": "棕色门边的小身影",
+  "previewPhoto": "assets/lucky-32-preview.webp",
+  "previewFit": "contain",
+  "previewPosition": "center"
+},
   {
     "id": "lucky-walking-beside-the-sofa",
     "date": "2026-10-16",

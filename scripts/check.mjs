@@ -7,9 +7,9 @@ import {notes} from '../content.js';
 import {growthThemes,buildCollectionTimeline,findThemeGaps,buildIntakeSeries} from '../growth.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-assert.equal(notes.length,54);
-assert.equal(notes.filter(n=>n.video).length,30);
-assert.equal(new Set(notes.map(n=>n.id)).size,54);
+assert.equal(notes.length,56);
+assert.equal(notes.filter(n=>n.video).length,32);
+assert.equal(new Set(notes.map(n=>n.id)).size,56);
 const files=['index.html','404.html','app.js','album.js','content.js','growth.js','styles.css','album.css','pet.css','pet.js','character-rig.js'];
 const references=new Set();
 for(const file of files){
@@ -38,6 +38,14 @@ for(const item of manifest.media_files){
   const raw=await readFile(join(root,item.path));
   assert.equal(raw.length,item.bytes,`Size changed ${item.path}`);
   assert.equal(createHash('sha256').update(raw).digest('hex'),item.sha256,`Bytes changed ${item.path}`);
+}
+const additions=JSON.parse(await readFile(join(root,'MEDIA_20261020.json'),'utf8'));
+assert.equal(additions.records,notes.length);
+assert.equal(additions.videos,notes.filter(n=>n.video).length);
+for(const item of additions.media_files){
+  const raw=await readFile(join(root,item.path));
+  assert.equal(raw.length,item.bytes,`Added asset size changed ${item.path}`);
+  assert.equal(createHash('sha256').update(raw).digest('hex'),item.sha256,`Added asset changed ${item.path}`);
 }
 for(const name of await readdir(join(root,'assets'))) assert((await stat(join(root,'assets',name))).size<100*1024*1024,`GitHub file limit ${name}`);
 // Every record remains reachable from its actual collection batch, even after
@@ -70,11 +78,11 @@ assert.deepEqual(intake.points.map(p=>p.total),timeline.map(b=>b.total));
 assert.equal(intake.points.at(-1).total,notes.length);
 assert.equal(intake.points.reduce((s,p)=>s+p.added,0),notes.length);
 assert(intake.points.every(p=>p.x>=0&&p.x<=1&&p.y>0&&p.y<=1),'chart coordinates out of range');
-const added=buildCollectionTimeline([...notes,{id:'future-record',date:'2026-10-17',photo:'future.jpg'}]);
-assert.equal(added.at(-1).total,55);
+const added=buildCollectionTimeline([...notes,{id:'future-record',date:'2026-10-21',photo:'future.jpg'}]);
+assert.equal(added.at(-1).total,notes.length+1);
 assert.equal(added.at(-1).items[0].id,'future-record');
 // Prove the coverage gate actually bites: an unplaced record must be reported.
-const unpicked=findThemeGaps([...notes,{id:'future-record',date:'2026-10-17',photo:'future.jpg'}]);
+const unpicked=findThemeGaps([...notes,{id:'future-record',date:'2026-10-21',photo:'future.jpg'}]);
 assert.deepEqual(unpicked.missing,['future-record']);
 assert.deepEqual(findThemeGaps(notes).missing,[],'current album must stay fully covered');
 // One module must be requested under exactly one URL: app.js importing
@@ -92,5 +100,5 @@ for(const file of files){
 for(const [target,tokens] of versions)
   assert.equal(tokens.size,1,`${target} is requested under ${[...tokens].join(' and ')} — duplicate module instances`);
 
-console.log(`Verified 54 unique records (30 videos, 24 photos), ${references.size} referenced assets and ${manifest.media_files.length} byte-preserved files; no old hosting dependency.`);
+console.log(`Verified 56 unique records (32 videos, 24 photos), ${references.size} referenced assets and ${manifest.media_files.length} byte-preserved baseline files and ${additions.media_files.length} verified new assets; no old hosting dependency.`);
 console.log(`Growth: ${timeline.length} collection batches, ${themedIds.length} source-linked observations; all records reachable, future batch supported.`);

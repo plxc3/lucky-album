@@ -209,3 +209,74 @@
 .character-playback button:disabled{opacity:.55}
 @media(max-width:760px){.character-transform--live{gap:18px}.character-transform--live .character-display{height:430px}}
 @media(max-width:380px){.character-transform--live{padding:0}.character-transform--live .character-display{height:360px}.character-transform--live .character-interactions{grid-template-columns:repeat(auto-fit,minmax(min(100%,5.5rem),1fr))}}
+
+/* Read the cat's story before the catalogue; keep the owner's paper and green ink. */
+.growth-view .growth-hero{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);min-height:0;border:0;border-radius:0;background:#e8ece5;box-shadow:none;overflow:hidden}
+.growth-view .growth-hero:before,.growth-view .growth-hero-copy:after{content:none}
+.growth-view .growth-hero-copy{padding:clamp(25px,4vw,58px);justify-content:center}
+.growth-view .growth-hero h1{margin:0 0 24px;font-size:clamp(2rem,5vw,4.4rem);line-height:1.2;letter-spacing:-.025em}
+.growth-view .growth-hero-lead{color:#354d40;line-height:1.8}
+.growth-overview{display:flex;flex-wrap:wrap;gap:8px 18px;margin:25px 0 0}
+.growth-overview button{min-height:44px;padding:10px 16px;border:0;border-radius:0;background:#2d4f40;color:#fffdf6;font:inherit;font-size:.875rem;cursor:pointer}
+.growth-overview button+button{background:transparent;color:#2d4f40;padding-inline:2px;text-decoration:underline;text-underline-offset:5px}
+.growth-overview button:hover{background:#183e2e;color:#fffdf6}
+.growth-overview button:focus-visible{outline:2px solid #2d4f40;outline-offset:4px}
+.growth-view .growth-profile{display:block;margin-top:24px;padding:0;border:0;color:#4c5c4f;font-size:.8125rem}
+.growth-view .growth-profile>span{display:block}
+.growth-view .growth-profile strong{display:block;font-size:.875rem}
+.growth-view .growth-hero-photo{display:flex;flex-direction:column;min-height:0;background:#e2e5df;padding:20px}
+.growth-view .growth-cover-button{height:480px;flex:none;min-height:0}
+.growth-view .growth-hero-photo img{position:static;object-fit:contain;object-position:center}
+.growth-view .growth-hero-photo figcaption{position:static;background:none;padding:14px 0 0;text-align:center;color:#405044;font-size:.8125rem}
+.growth-view .growth-observations{margin-top:64px}
+.growth-view .growth-story-heading{align-items:start}
+.growth-view .growth-story-heading h2{margin:0;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.45}
+.growth-view .growth-story-heading>p,.growth-view .growth-theme>header>p:last-child{font-size:1rem;color:#435247}
+.growth-view .growth-moment article{border:0;border-radius:0;background:transparent;box-shadow:none}
+.growth-view .growth-observations .growth-moment-copy{padding:16px 0 24px}
+.growth-view .growth-moment p{font-size:1rem;color:#435247}
+.growth-view .growth-image-button{border-radius:0;background:#e5e7e0}
+.growth-view .growth-context{display:block;border:0;background:#e8ece5}
+.growth-view .growth-context p{font-size:1rem;color:#435247}
+.growth-view .growth-intake-chart{border:0;border-radius:0;background:#e8ece5}
+.growth-view .growth-collection{margin-top:80px}
+.growth-view .growth-collection-copy{border-bottom:0}
+.journal-view .journal-heading{padding:30px 0 24px;margin:0 0 22px;background:none;border:0;border-radius:0;box-shadow:none;color:#284638}
+.journal-view .journal-heading:before,.journal-view .journal-heading:after{content:none}
+.journal-view .journal-heading h1{font-size:clamp(2rem,4vw,3.5rem);line-height:1.3;margin:0 0 16px;color:#284638}
+.journal-view .journal-heading>p:not(.eyebrow){color:#435247;font-size:1rem;max-width:38em}
+.journal-view .journal-heading>span{display:block;color:#526153;font-size:.875rem;margin-top:16px}
+.journal-view .journal-index{border:0;margin-bottom:32px;padding-block:0 12px}
+.journal-view .journal-index button{border:0;border-radius:0;min-height:44px;background:#e8ece5;color:#2d4f40}
+.journal-view .journal-section .journal-section-heading{grid-template-columns:minmax(0,1fr) auto;padding:0;border:0;gap:16px;margin-bottom:24px}
+.journal-view .journal-section-heading h2{font-size:clamp(1.45rem,2.4vw,2rem)}
+.journal-view .journal-section-description,.journal-view .post-description{font-size:1rem;color:#435247}
+.journal-view .post-item,.journal-view .journal-section--standard .post-item:first-child{border-bottom:0}
+.journal-view .journal-section .post-item .media-thumbnail{border:0;border-radius:0;background:#e5e7e0}
+.journal-view .journal-section .post-item:first-child{border:0;border-radius:0;box-shadow:none;background:#e8ece5}
+.journal-view .journal-section--standard .post-item:first-child{background:transparent}
+@media(max-width:800px){
+ .growth-view .growth-cover-button{height:390px}
+ .growth-view .growth-hero-copy{padding:28px}
+}
+@media(max-width:640px){
+ .growth-view .growth-hero{display:flex;gap:0}
+ .growth-view .growth-hero-copy{padding:26px 22px}
+ .growth-view .growth-hero h1{margin-bottom:16px}
+ .growth-view .growth-hero-photo{height:auto;padding:16px 22px 20px}
+ .growth-view .growth-cover-button{height:330px;flex:none}
+ .growth-view .growth-hero-lead{font-size:1rem}
+ .growth-view .growth-profile{margin-top:20px}
+ .growth-view .growth-story-heading>p{font-size:.9375rem}
+ .growth-view .growth-observations{margin-top:44px}
+ .growth-view .growth-observations .growth-moment-copy{padding:15px 0 24px}
+ .growth-view .growth-collection{margin-top:56px}
+ .journal-view .journal-heading{padding:4px 0 12px;margin-bottom:18px}
+ .journal-view .journal-heading h1{margin-bottom:12px}
+ .journal-view .journal-heading>p:not(.eyebrow){font-size:.9375rem}
+ .journal-view .journal-section .journal-section-heading{gap:8px;grid-template-columns:minmax(0,1fr)}
+ .journal-view .journal-section-count{grid-column:1;padding:0}
+ .journal-view .journal-index{margin-bottom:22px}
+}
+
+.growth-view .growth-theme-index button{border:0;border-radius:0;background:#e8ece5;font-size:.875rem}

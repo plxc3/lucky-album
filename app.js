@@ -1,6 +1,6 @@
-import { site, notes } from './content.js?v=20261020-1';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261020-1';
-import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261020-1';
+import { site, notes } from './content.js?v=20261020-2';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261020-2';
+import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261020-2';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -16,8 +16,8 @@ let activePhoto = 0;
 let activeSequence = notes;
 let lastPhotoButton;
 let lastRoute = '';
-let journalScrollY = 0;
-let journalReturnNoteId = '';
+let readingReturn = null;
+let readingTrigger;
 let imageObserver;
 const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const dateText = (date) => date.replaceAll('-', '.');
@@ -131,17 +131,17 @@ function renderGrowthTheme(theme) {
   // Native details keeps every card and diary link in the DOM. Its closed content
   // has no layout box; deferred images load when opening makes them intersect.
   const more = remaining.length ? `<details class="growth-theme-more"><summary>展开本主题其余 ${remaining.length} 个片段</summary><ul class="growth-moments">${remaining.map(renderGrowthMoment).join('')}</ul></details>` : '';
-  return `<section class="growth-theme" aria-labelledby="growth-theme-${theme.id}"><header><p class="growth-moment-label">${escape(theme.label)}</p><h3 id="growth-theme-${theme.id}" tabindex="-1">${escape(theme.title)}</h3><p>${escape(theme.description)}</p></header><ul class="growth-moments">${featured.map(renderGrowthMoment).join('')}</ul>${more}</section>`;
+  return `<section class="growth-theme" aria-labelledby="growth-theme-${theme.id}"><header><h3 id="growth-theme-${theme.id}" tabindex="-1">${escape(theme.title)}</h3><p>${escape(theme.description)}</p></header><ul class="growth-moments">${featured.map(renderGrowthMoment).join('')}</ul>${more}</section>`;
 }
 
 function renderGrowth() {
   const hero = notes.find(note => note.id === 'lucky-fluffy-back');
   const intake = buildIntakeSeries(notes);
   return `<section class="growth-view" aria-labelledby="growth-title">
-    <header class="growth-hero"><div class="growth-hero-copy"><p class="growth-kicker">LUCKY / LITTLE BY LITTLE</p><h1 id="growth-title">小小一团，<br>满满的日常。</h1><p class="growth-hero-lead">把小爪、长尾和轻快的脚步，一点点收进成长手记。${notes.length} 个真实片段，记下 Lucky 被陪伴、被看见的模样。</p><div class="growth-profile"><span class="growth-profile-mark" aria-hidden="true">✳</span><span>主人提供的小档案</span><strong>3 个月 · 母三花 · 灰尖长尾</strong></div></div><figure class="growth-hero-photo"><button class="growth-cover-button" type="button" data-photo="${notes.indexOf(hero)}" aria-label="放大查看 Lucky 的三花背影"><img src="${hero.previewPhoto || hero.photo}" alt="Lucky 背对镜头坐在蓝边白色垫子上，奶白长毛间有烟灰和浅杏斑块" width="${hero.width}" height="${hero.height}"></button><figcaption>奶白、烟灰和浅杏，都是她的颜色。</figcaption></figure><span class="growth-hero-index" aria-hidden="true">LITTLE MOMENTS / ${notes.length}</span></header>
-    <section class="growth-collection" aria-labelledby="growth-collection-title"><header class="growth-story-heading"><div><p class="growth-kicker">OUR ALBUM KEEPS GROWING</p><h2 id="growth-collection-title">陪她的日子，一页页收好</h2></div><p>${albumCount}。下面按<strong>收录日期</strong>排列，记录相册怎样添页；不代表素材的拍摄先后。</p></header>${renderIntakeChart(intake)}<ol class="growth-collection-list">${growthTimeline.map(batch => `<li><article><div class="growth-collection-date"><span>收录日期</span><time datetime="${batch.date}">${dateText(batch.date)}</time><small>累计 ${batch.total} 条记录</small></div><div class="growth-collection-copy"><h3>${escape(batch.title)}</h3><p>${escape(batch.description)}</p><p class="growth-batch-count">本次 ${batch.items.length} 条 · ${batch.videos} 段视频 · ${batch.photos} 张照片</p><details><summary>翻看本次全部 ${batch.items.length} 条记录</summary><ul>${batch.items.map(note => `<li><a href="#/note/${escape(note.id)}"><span>${escape(note.title)}</span><small>${duration(note)}</small></a></li>`).join('')}</ul></details></div></article></li>`).join('')}</ol></section>
-    <section class="growth-story growth-observations" aria-labelledby="growth-story-title"><header class="growth-story-heading"><div><p class="growth-kicker">WAYS TO REMEMBER HER</p><h2 id="growth-story-title">在这些小事里，看见 Lucky</h2></div><p>${growthThemes.length} 条观察线，把 ${growthNotes.length} 个照片与动作片段放在一起，覆盖相册里的每一条记录。按生活主题翻看，不把不同姿态当作长大的刻度。</p></header><nav class="growth-theme-index" aria-label="选择成长观察主题">${growthThemes.map(theme => `<button type="button" data-growth-jump="growth-theme-${theme.id}">${escape(theme.label.slice(5))}</button>`).join('')}</nav>${growthThemes.map(renderGrowthTheme).join('')}</section>
-    <section class="growth-context" aria-labelledby="growth-context-title"><div class="growth-context-icon" aria-hidden="true">✳</div><div><h2 id="growth-context-title">把看得见的留下，把未知的留白</h2><p>这是一份基于现有影像的成长手记。目前没有可靠的拍摄日期、逐月体重或身长记录；收录日期不等于拍摄日期。镜头远近和姿势会影响看起来的大小，因此这里记录动作、陪伴与日常，不绘制未经测量的成长曲线。</p></div></section>
+    <header class="growth-hero"><div class="growth-hero-copy"><h1 id="growth-title">Lucky 的<br>成长手记</h1><p class="growth-hero-lead">从小爪、长尾到轻快的脚步，${notes.length} 个真实片段，记录 Lucky 被陪伴的日常。</p><nav class="growth-overview" aria-label="成长手记阅读入口"><button type="button" data-growth-jump="growth-story-title">看生活观察 <span aria-hidden="true">↓</span></button><button type="button" data-growth-jump="growth-collection-title">看相册添页 <span aria-hidden="true">↓</span></button></nav><div class="growth-profile"><span>主人提供的小档案</span><strong>3 个月 · 母三花 · 灰尖长尾</strong></div></div><figure class="growth-hero-photo"><button class="growth-cover-button" type="button" data-photo="${notes.indexOf(hero)}" aria-label="放大查看 Lucky 的三花背影"><img src="${hero.previewPhoto || hero.photo}" alt="Lucky 背对镜头坐在蓝边白色垫子上，奶白长毛间有烟灰和浅杏斑块" width="${hero.width}" height="${hero.height}"></button><figcaption>奶白、烟灰和浅杏，都是她的颜色。</figcaption></figure></header>
+    <section class="growth-story growth-observations" aria-labelledby="growth-story-title"><header class="growth-story-heading"><div><h2 id="growth-story-title" tabindex="-1">在这些小事里，看见 Lucky</h2></div><p>${growthThemes.length} 条观察线，把 ${growthNotes.length} 个照片与动作片段放在一起，覆盖相册里的每一条记录。按生活主题翻看，不把不同姿态当作长大的刻度。</p></header><nav class="growth-theme-index" aria-label="选择成长观察主题">${growthThemes.map(theme => `<button type="button" data-growth-jump="growth-theme-${theme.id}">${escape(theme.label.slice(5))}</button>`).join('')}</nav>${growthThemes.map(renderGrowthTheme).join('')}</section>
+    <section class="growth-collection" aria-labelledby="growth-collection-title"><header class="growth-story-heading"><div><h2 id="growth-collection-title" tabindex="-1">陪她的日子，一页页收好</h2></div><p>${albumCount}。下面按<strong>收录日期</strong>排列，记录相册怎样添页；不代表素材的拍摄先后。</p></header>${renderIntakeChart(intake)}<ol class="growth-collection-list">${growthTimeline.map(batch => `<li><article><div class="growth-collection-date"><span>收录日期</span><time datetime="${batch.date}">${dateText(batch.date)}</time><small>累计 ${batch.total} 条记录</small></div><div class="growth-collection-copy"><h3>${escape(batch.title)}</h3><p>${escape(batch.description)}</p><p class="growth-batch-count">本次 ${batch.items.length} 条 · ${batch.videos} 段视频 · ${batch.photos} 张照片</p><details><summary>翻看本次全部 ${batch.items.length} 条记录</summary><ul>${batch.items.map(note => `<li><a href="#/note/${escape(note.id)}"><span>${escape(note.title)}</span><small>${duration(note)}</small></a></li>`).join('')}</ul></details></div></article></li>`).join('')}</ol></section>
+    <section class="growth-context" aria-labelledby="growth-context-title"><div><h2 id="growth-context-title">把看得见的留下，把未知的留白</h2><p>这是一份基于现有影像的成长手记。目前没有可靠的拍摄日期、逐月体重或身长记录；收录日期不等于拍摄日期。镜头远近和姿势会影响看起来的大小，因此这里记录动作、陪伴与日常，不绘制未经测量的成长曲线。</p></div></section>
     <nav class="growth-next" aria-label="继续看 Lucky"><a href="#/notes">翻翻 Lucky 的日记 <span aria-hidden="true">→</span></a><a href="#/">回到小相册 <span aria-hidden="true">→</span></a></nav>
   </section>`;
 }
@@ -197,6 +197,7 @@ function selectCharacterFeature(index, moveFocus = false) {
 }
 
 const realCharacterNote = notes.find(note => note.id === 'lucky-little-paws');
+
 const characterForms = [
   {
     id:'photo', label:'真实小猫', eyebrow:'LUCKY / THE LITTLE MUSE',
@@ -332,7 +333,7 @@ function mountCharacter(){
   },{rootMargin:'80px'});state.observer.observe(section.querySelector('.character-display'));
   void (async()=>{
     try{
-      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-1');
+      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-2');
       const player=await createLuckyPlayer({host:section.querySelector('[data-character-live2d]'),signal:state.abort.signal,initialForm:section.dataset.characterForm==='human'?'girl':'cat',onMotion:({group})=>{
         if(state.destroyed||state.busy||section.dataset.characterForm==='photo')return;
         section.dataset.motion=group;status.textContent=characterLabels[group]||'Lucky 陪着你。';
@@ -378,10 +379,24 @@ document.querySelector('.site-footer > p').textContent = `© 2026 · ${site.titl
 
 function thumbnail(note, index, album = false) {
   const frame = note.previewFit === 'contain' ? 'object-fit:contain' : `object-position:${note.previewPosition || 'center'}`;
-  return `<span class="media-thumbnail ${album ? 'album-thumbnail' : ''}"><img class="${album ? '' : 'post-thumbnail'}" src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" style="${escape(frame)}" ${index > 0 ? 'loading="lazy"' : ''}>${note.video ? `<span class="video-badge">视频 ${escape(note.duration)}</span>` : ''}</span>`;
+  const orientation = note.width < note.height ? ' media-thumbnail--portrait' : '';
+  return `<span class="media-thumbnail${orientation} ${album ? 'album-thumbnail' : ''}"><img class="${album ? '' : 'post-thumbnail'}" src="${escape(note.previewPhoto || note.photo)}" alt="${escape(note.alt)}" width="${note.width}" height="${note.height}" style="${escape(frame)}" ${index > 0 ? 'loading="lazy"' : ''}>${note.video ? `<span class="video-badge">视频 ${escape(note.duration)}</span>` : ''}</span>`;
 }
 function pauseInlineVideos() {
   main.querySelectorAll('video').forEach(element => element.pause());
+}
+const readingOrigins = {
+  '/notes':'返回日记', '/growth':'返回成长观察', '/':'返回小相册', '/photos':'返回小相册',
+};
+function rememberReadingPosition(route, noteId) {
+  const controls = [...main.querySelectorAll('a,button,summary')];
+  const trigger = main.contains(readingTrigger) ? readingTrigger : document.activeElement;
+  return {
+    route, noteId, scrollY:window.scrollY,
+    focusIndex:controls.indexOf(trigger),
+    details:[...main.querySelectorAll('details')].map(detail => detail.open),
+    chapterScroll:main.querySelector('.chapter-tabs')?.scrollLeft || 0,
+  };
 }
 function render() {
   destroyCharacter();
@@ -390,11 +405,11 @@ function render() {
   pauseInlineVideos();
   destroyAlbum();
   const route = location.hash === '#main' ? '/' : (location.hash.slice(1) || '/');
-  if (lastRoute === '/notes' && route !== '/notes') {
-    journalScrollY = window.scrollY;
-    journalReturnNoteId = route.startsWith('/note/') ? route.slice('/note/'.length) : '';
-  }
-  if (route.startsWith('/note/') && lastRoute !== '/notes' && !lastRoute.startsWith('/note/')) journalReturnNoteId = '';
+  if (route.startsWith('/note/')) {
+    if (readingOrigins[lastRoute]) readingReturn = rememberReadingPosition(lastRoute, route.slice('/note/'.length));
+    else if (!lastRoute.startsWith('/note/')) readingReturn = null;
+  } else if (!lastRoute.startsWith('/note/')) readingReturn = null;
+  readingTrigger = undefined;
   document.querySelectorAll('[data-nav]').forEach(link => link.removeAttribute('aria-current'));
   const navKey = route === '/' || route === '/photos' ? 'photos' : route === '/character' ? 'character' : route === '/growth' ? 'growth' : 'notes';
   const navLink = document.querySelector(`[data-nav="${navKey}"]`);
@@ -420,16 +435,18 @@ function render() {
     const sections = journalGroups.map((group, groupIndex) => {
       const items = group.ids.map(id => noteById.get(id)).filter(Boolean);
       const chapter = String(groupIndex + 1).padStart(2, '0');
-      return `<section class="journal-section ${groupIndex === 0 ? 'journal-section--opening' : 'journal-section--standard'}" aria-labelledby="journal-chapter-${chapter}"><header class="journal-section-heading"><span class="journal-section-number" aria-hidden="true">${chapter}</span><div><p class="journal-section-kicker">CHAPTER ${chapter} / ${String(journalGroups.length).padStart(2,'0')}</p><h2 id="journal-chapter-${chapter}" tabindex="-1">${escape(group.title)}</h2><p class="journal-section-description">${escape(group.description)}</p></div><span class="journal-section-count">${String(items.length).padStart(2, '0')} 个片段</span></header><div class="post-list">${items.map(note => {
+      return `<section class="journal-section ${groupIndex === 0 ? 'journal-section--opening' : 'journal-section--standard'}" aria-labelledby="journal-chapter-${chapter}"><header class="journal-section-heading"><div><h2 id="journal-chapter-${chapter}" tabindex="-1">${escape(group.title)}</h2><p class="journal-section-description">${escape(group.description)}</p></div><span class="journal-section-count">${String(items.length).padStart(2, '0')} 个片段</span></header><div class="post-list">${items.map(note => {
         const index = journalIndex++;
-        return `<article class="post-item"><a class="post-link" href="#/note/${escape(note.id)}"><div class="post-info"><div class="post-overline"><span>NO. ${String(index + 1).padStart(2, '0')}</span>${sharedCollectionDate ? `<span class="post-format">${duration(note)}</span>` : `<time datetime="${note.date}">收录于 ${dateText(note.date)}</time>`}</div><h3 class="post-title">${escape(note.title)}</h3><p class="post-description">${escape(note.description)}</p></div>${thumbnail(note,index)}</a></article>`;
+        return `<article class="post-item"><a class="post-link" href="#/note/${escape(note.id)}"><div class="post-info"><div class="post-overline">${sharedCollectionDate ? `<span class="post-format">${duration(note)}</span>` : `<time datetime="${note.date}">收录于 ${dateText(note.date)}</time>`}</div><h3 class="post-title">${escape(note.title)}</h3><p class="post-description">${escape(note.description)}</p></div>${thumbnail(note,index)}</a></article>`;
       }).join('')}</div></section>`;
     }).join('');
-    main.innerHTML = deferOffscreenImages(`<section class="journal-view"><header class="journal-heading"><p class="eyebrow">LUCKY / LITTLE NOTES</p><h1>把普通日子，写成小小的一页。</h1><p>从夜里的窗边，到沙发上的小睡。Lucky 的每一个瞬间，都有自己的位置。</p><span>${notes.length} 个片段 · ${albumCount}${sharedCollectionDate ? ` · 收录于 ${dateText(sharedCollectionDate)}` : ''}</span></header><nav class="journal-index" aria-label="跳转到日记章节"><span>按主题翻阅</span>${journalGroups.map((group,index) => `<button type="button" data-journal-jump="journal-chapter-${String(index+1).padStart(2,'0')}">${escape(group.title)} <span aria-hidden="true">→</span></button>`).join('')}</nav><div class="journal-sections">${sections}</div></section>`);
+    main.innerHTML = deferOffscreenImages(`<section class="journal-view"><header class="journal-heading"><h1>Lucky 的日记</h1><p>从夜里的窗边，到沙发上的小睡。Lucky 的每一个瞬间，都有自己的位置。</p><span>${notes.length} 个片段 · ${albumCount}${sharedCollectionDate ? ` · 收录于 ${dateText(sharedCollectionDate)}` : ''}</span></header><nav class="journal-index" aria-label="跳转到日记章节"><span>按主题翻阅</span>${journalGroups.map((group,index) => `<button type="button" data-journal-jump="journal-chapter-${String(index+1).padStart(2,'0')}">${escape(group.title)} <span aria-hidden="true">→</span></button>`).join('')}</nav><div class="journal-sections">${sections}</div></section>`);
   } else {
     const note = notes.find(n => route === `/note/${n.id}`);
     if (note) {
       document.title = `${note.title} · ${site.title}`;
+      const returnRoute = readingReturn?.route || '/notes';
+      const returnLabel = readingOrigins[returnRoute];
       const readingIndex = journalSequence.indexOf(note);
       const chapter = journalGroups.find(group => group.ids.includes(note.id)) || {title:'Lucky 的日记'};
       const adjacent = (item, label, direction) => item
@@ -438,21 +455,29 @@ function render() {
       const media = note.video
         ? `<video class="note-video" controls playsinline preload="none" poster="${escape(note.photo)}" width="${note.width}" height="${note.height}" aria-label="${escape(note.alt)}"><source src="${escape(note.video)}" type="video/mp4">无法播放视频，<a href="${escape(note.video)}">打开视频文件</a>。</video><button class="expand-video" data-photo="${notes.indexOf(note)}" type="button">放大观看</button>`
         : `<button type="button" class="photo-button" data-photo="${notes.indexOf(note)}" aria-label="查看大图：${escape(note.caption)}"><img class="note-photo" src="${escape(note.photo)}" alt="${escape(note.alt)}"></button>`;
-      main.innerHTML = `<article class="note-view"><a class="back-link note-back" href="#/notes">← 返回日记</a><div class="note-spread"><header class="note-copy"><p class="note-kicker">${escape(chapter.title)} <span aria-hidden="true">/</span> ${String(readingIndex+1).padStart(2,'0')}—${journalSequence.length}</p><h1 class="note-title">${escape(note.title)}</h1><div class="note-meta"><time datetime="${note.date}">收录于 ${dateText(note.date)}</time><span>${duration(note)}</span></div></header><figure class="note-photo-block">${media}${note.originalPhoto ? `<a class="original-download" href="${escape(note.originalPhoto)}" download>下载相册原始 HEIC</a>` : ''}<figcaption class="photo-caption">${escape(note.caption)}</figcaption></figure><div class="note-body">${note.paragraphs.map(p => `<p>${escape(p)}</p>`).join('')}<span class="note-signature" aria-hidden="true">Lucky's little moment.</span></div></div><nav class="note-pagination" aria-label="继续读日记">${adjacent(journalSequence[readingIndex-1],'上一篇','←')}${adjacent(journalSequence[readingIndex+1],'下一篇','→')}</nav></article>`;
+      main.innerHTML = `<article class="note-view"><a class="back-link note-back" href="#${returnRoute}">← ${returnLabel}</a><div class="note-spread"><header class="note-copy"><p class="note-kicker">${escape(chapter.title)} <span aria-hidden="true">/</span> ${String(readingIndex+1).padStart(2,'0')}—${journalSequence.length}</p><h1 class="note-title">${escape(note.title)}</h1><div class="note-meta"><time datetime="${note.date}">收录于 ${dateText(note.date)}</time><span>${duration(note)}</span></div></header><figure class="note-photo-block">${media}${note.originalPhoto ? `<a class="original-download" href="${escape(note.originalPhoto)}" download>下载相册原始 HEIC</a>` : ''}<figcaption class="photo-caption">${escape(note.caption)}</figcaption></figure><div class="note-body">${note.paragraphs.map(p => `<p>${escape(p)}</p>`).join('')}<span class="note-signature" aria-hidden="true">Lucky's little moment.</span></div></div><nav class="note-pagination" aria-label="继续读日记">${adjacent(journalSequence[readingIndex-1],'上一篇','←')}${adjacent(journalSequence[readingIndex+1],'下一篇','→')}</nav></article>`;
     } else {
       document.title = `未找到日记 · ${site.title}`;
       main.innerHTML = '<h1 class="note-title">这篇日记还没有写。</h1><a class="back-link" href="#/notes">返回日记</a>';
     }
   }
+  const returnPosition = readingReturn?.route === route && lastRoute.startsWith('/note/') ? readingReturn : null;
+  if (returnPosition) {
+    main.querySelectorAll('details').forEach((detail,index) => { detail.open = !!returnPosition.details[index]; });
+    const chapterTabs = main.querySelector('.chapter-tabs');
+    if (chapterTabs) chapterTabs.scrollLeft = returnPosition.chapterScroll;
+  }
   mountImages();
   if (lastRoute && route !== lastRoute) {
-    const returningToJournal = route === '/notes' && lastRoute.startsWith('/note/') && journalReturnNoteId;
     window.scrollTo(0,0);
     main.focus({preventScroll:true});
-    if (returningToJournal) window.requestAnimationFrame(() => {
-      const item = [...main.querySelectorAll('.post-link')].find(link => link.getAttribute('href') === `#/note/${journalReturnNoteId}`);
+    if (returnPosition) window.requestAnimationFrame(() => {
+      if (lastRoute !== route) return;
+      const controls = [...main.querySelectorAll('a,button,summary')];
+      const item = controls[returnPosition.focusIndex]
+        || [...main.querySelectorAll('a[href]')].find(link => link.getAttribute('href') === `#/note/${returnPosition.noteId}`);
       item?.focus({preventScroll:true});
-      window.scrollTo(0,journalScrollY);
+      window.scrollTo(0,returnPosition.scrollY);
     });
   }
   lastRoute = route;
@@ -512,6 +537,8 @@ function closePhoto() {
   if (lastPhotoButton?.isConnected) lastPhotoButton.focus({preventScroll:true});
 }
 main.addEventListener('click', event => {
+  const noteLink = event.target.closest('a[href^="#/note/"]');
+  if (noteLink && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) readingTrigger = noteLink;
   const action = event.target.closest('[data-character-action]');
   if (action) { interactWithCharacter(action.dataset.characterAction); return; }
   const formTab = event.target.closest('[data-character-form-tab]');

@@ -1,5 +1,5 @@
 // Reading themes describe visible evidence, never an inferred shooting order.
-// Every one of the 54 collected records is placed in exactly one theme, so the
+// Every collected record is placed in exactly one theme, so the
 // growth view reflects the whole album rather than a curated dozen.
 export const growthThemes = [
   {
@@ -22,11 +22,11 @@ export const growthThemes = [
   },
   {
     id:'explore', label:'03 / 走动与探索', title:'家里的小角落，都在镜头里',
-    description:'在敞开的箱门旁走动，靠近沙发布边，绕过猫抓柱，还有柜边的一次翻身。完整视频留着，能看清她怎样经过这些地方。',
+    description:'在敞开的箱门旁走动，靠近沙发布边，绕过猫抓柱，也在棕色门边停留、转身。完整视频留着，能看清她怎样经过这些地方。',
     ids:[
       'lucky-exploring','lucky-walking-beside-the-sofa','lucky-among-the-sofa-toys',
       'lucky-walking-among-plush-toys','lucky-circling-the-scratcher','lucky-following-a-toy-by-the-scratcher',
-      'lucky-at-the-mushroom-scratcher','lucky-by-the-sofa-cover','lucky-rolling-by-the-cabinet',
+      'lucky-at-the-mushroom-scratcher','lucky-by-the-sofa-cover','lucky-rolling-by-the-cabinet','lucky-beside-the-brown-door',
     ],
   },
   {
@@ -56,15 +56,16 @@ export const growthThemes = [
   },
   {
     id:'quiet', label:'07 / 抬头、逗猫棒与小睡', title:'张望、玩耍，也有安静睡姿',
-    description:'抬头望笼顶的小鸟，在椅脚旁与小鸟同框，在沙发上望向蓝色羽毛。贴着鼻尖的小爪和四脚朝天的睡姿，则留下了闭眼休息的样子。',
+    description:'抬头望笼顶的小鸟，在椅脚旁与小鸟同框，在沙发上望向蓝色羽毛，也低头碰一碰粉色玩具。贴着鼻尖的小爪和四脚朝天的睡姿，则留下了闭眼休息的样子。',
     ids:[
       'lucky-watching-the-bird','lucky-curled-up-with-paws-by-her-face','lucky-sleeping-on-the-back',
-      'lucky-and-a-small-neighbor','lucky-and-the-blue-feather',
+      'lucky-and-a-small-neighbor','lucky-and-the-blue-feather','lucky-with-the-pink-toy',
     ],
   },
 ];
 
 const collectionCopy = {
+  '2026-10-20': {title:'门边和玩具旁的新片段',description:'新收下粉色玩具旁的小脚步，以及棕色门边抬头、转身的两段原声视频。这里的日期是入册日期。'},
   '2026-10-09': {title:'先把这些小日子留下',description:'航空箱里的眼神、抱住手指的小爪，还有窗边与小窝。第一批入册的照片和视频，留下她的模样。'},
   '2026-10-15': {title:'多一些角度，多一些陪伴',description:'补入肩头、黄包、书桌和睡姿的照片，也收下椅垫上伸爪与探头的两个小片段。'},
   '2026-10-16': {title:'把小动作也收进来',description:'这次补入的视频里，有沙发边走动、窗边跃起、跟着手掌抬爪和玩偶间探身。静态画面之外，也能听见原声、看见完整动作。'},
