@@ -1,6 +1,6 @@
-import { site, notes } from './content.js?v=20261019-2';
-import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261019-2';
-import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261019-2';
+import { site, notes } from './content.js?v=20261020-1';
+import { renderAlbum, mountAlbum, destroyAlbum } from './album.js?v=20261020-1';
+import {growthThemes, buildCollectionTimeline, buildIntakeSeries} from './growth.js?v=20261020-1';
 
 const main = document.querySelector('main');
 const dialog = document.querySelector('.lightbox');
@@ -296,12 +296,12 @@ function interactWithCharacter(action,source='manual'){
 }
 function destroyCharacter(){
   const state=characterMount;characterMount=null;if(!state)return;
-  state.destroyed=true;state.observer?.disconnect();state.clearPress();
+  state.destroyed=true;state.abort.abort();state.observer?.disconnect();state.clearPress();
   void state.player?.dispose();
 }
 function mountCharacter(){
   const section=main.querySelector('.character-transform');if(!section)return;
-  const state={section,player:null,destroyed:false,busy:false,initializing:true,queued:null,inView:true,manualPaused:false,error:false};
+  const state={section,player:null,abort:new AbortController(),destroyed:false,busy:false,initializing:true,queued:null,inView:true,manualPaused:false,error:false};
   characterMount=state;
   const hit=section.querySelector('[data-character-transform-hit]'),status=section.querySelector('.character-action-status');
   let press=null,suppressed=false,suppressedUntil=0;
@@ -332,8 +332,8 @@ function mountCharacter(){
   },{rootMargin:'80px'});state.observer.observe(section.querySelector('.character-display'));
   void (async()=>{
     try{
-      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261019-2');
-      const player=await createLuckyPlayer({host:section.querySelector('[data-character-live2d]'),initialForm:section.dataset.characterForm==='human'?'girl':'cat',onMotion:({group})=>{
+      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-1');
+      const player=await createLuckyPlayer({host:section.querySelector('[data-character-live2d]'),signal:state.abort.signal,initialForm:section.dataset.characterForm==='human'?'girl':'cat',onMotion:({group})=>{
         if(state.destroyed||state.busy||section.dataset.characterForm==='photo')return;
         section.dataset.motion=group;status.textContent=characterLabels[group]||'Lucky 陪着你。';
       },onError:()=>{

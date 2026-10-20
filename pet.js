@@ -3,7 +3,7 @@
 const STORAGE_KEY = 'lucky-web-pet-v1';
 // The floating pet renders at 136 CSS pixels or smaller; the full-size images
 // remain available for the character page and original artwork comparison.
-import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261019-2';
+import {SPRITES, catRig, humanRig} from './character-rig.js?v=20261020-1';
 const rigMarkup = catRig('lucky-pet', true);
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { /* Storage can be unavailable. */ }
@@ -72,23 +72,43 @@ const preloadedSprites = new Map();
 let petImagesActive = false;
 
 // The floating companion shares the real runtime with the main transformation stage.
-let petPlayer,petPlayerTask,petFormBusy=false,petQueuedForm;
+let petPlayer,petPlayerTask,petLoadAbort,petFormBusy=false,petQueuedForm;
 let petLongPressTimer,petLongConsumed=false;
 const petCanvasHost=document.createElement('span');petCanvasHost.className='lucky-pet-canvas';petCanvasHost.setAttribute('aria-hidden','true');
 character.prepend(petCanvasHost);pet.dataset.modelState='loading';
+function cancelPetLoading(){
+  if(!petLoadAbort)return;
+  petLoadAbort.abort();petLoadAbort=null;petPlayerTask=null;
+  if(!petPlayer?.ready)pet.dataset.modelState='loading';
+}
 async function ensurePetPlayer(){
+  if(petPlayer?.ready)return petPlayer;
   if(petPlayerTask)return petPlayerTask;
-  petPlayerTask=(async()=>{
+  const abort=new AbortController();petLoadAbort=abort;pet.dataset.modelState='loading';
+  const task=(async()=>{
+    let candidate;
     try{
-      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261019-2');
-      const player=await createLuckyPlayer({host:petCanvasHost,initialForm:petForm==='human'?'girl':'cat',maxDpr:1.5,
+      const {createLuckyPlayer}=await import('./live2d/player.js?v=20261020-1');
+      if(abort.signal.aborted)return null;
+      const player=candidate=await createLuckyPlayer({host:petCanvasHost,signal:abort.signal,initialForm:petForm==='human'?'girl':'cat',maxDpr:1.5,
         onMotion:({group})=>{pet.dataset.motion=group;},
-        onError:()=>{pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时停下了，先用图画陪着你。');}});
+        onError:()=>{if(abort.signal.aborted)return;pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时停下了，先用图画陪着你。');}});
+      if(abort.signal.aborted){await player.dispose();return null;}
+      const wanted=petForm==='human'?'girl':'cat';
+      if(player.form!==wanted)await player.switchTo(wanted,true);
+      if(abort.signal.aborted){await player.dispose();return null;}
       petPlayer=player;pet.dataset.modelState='ready';player.setSuspended(pet.hidden);
       clearTimeout(blinkTimer);clearTimeout(blinkEndTimer);pet.classList.remove('is-blinking');
       isSleeping=false;pet.dataset.state='idle';sleepButton.textContent='☾ 安静陪伴';return player;
-    }catch{pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时没有加载，当前显示静态参考。');return null;}
-  })();return petPlayerTask;
+    }catch{
+      await candidate?.dispose();
+      if(abort.signal.aborted)return null;
+      pet.dataset.modelState='error';if(!pet.hidden)showBubble('动态暂时没有加载，当前显示静态参考。');return null;
+    }finally{
+      if(petLoadAbort===abort){petLoadAbort=null;petPlayerTask=null;}
+    }
+  })();
+  petPlayerTask=task;return task;
 }
 
 function activatePetImages() {
@@ -301,7 +321,7 @@ function hidePet() {
   bubble.hidden = true;
   petVisible = false;
   pet.hidden = true;
-  clearTimeout(petLongPressTimer);petPlayer?.setSuspended(true);
+  clearTimeout(petLongPressTimer);cancelPetLoading();petPlayer?.setSuspended(true);
   launcher.hidden = false;
   launcher.focus({ preventScroll: true });
   save();
@@ -322,7 +342,7 @@ function syncRouteVisibility(reset = false) {
   const compactView = window.innerWidth <= 640 || isReading || !sideRailFits;
   pet.hidden = !petVisible || (compactView && !revealedForCurrentView);
   launcher.hidden = !pet.hidden;
-  if (pet.hidden) closeMenu();
+  if (pet.hidden) {closeMenu();cancelPetLoading();}
   else {activatePetImages();void ensurePetPlayer();}
   petPlayer?.setSuspended(pet.hidden);
   scheduleBlink();

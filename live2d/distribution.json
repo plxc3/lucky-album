@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-19-2",
+  "version": "2026-10-20-1",
   "status": "experimental-baseline",
   "models": {
     "cat": "v005",
@@ -144,8 +144,8 @@
     },
     {
       "path": "player.js",
-      "bytes": 14717,
-      "sha256": "80b250572d060f5c6f24e6023c98b687dd9c1652a30327952b20ee8f2a70c3bc"
+      "bytes": 18942,
+      "sha256": "2fd9a83590799f0213fbb223189b4d84c759077128e91ef1abb8b93e5ce534dd"
     },
     {
       "path": "sdk/core.js",

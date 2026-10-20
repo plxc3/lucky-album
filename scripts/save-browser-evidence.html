@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>浏览器验证截图存档</title>
+<style>body{max-width:42rem;margin:3rem auto;padding:0 1rem;font:16px/1.6 system-ui}label{display:block;margin:1rem 0}input,textarea{display:block;box-sizing:border-box;width:100%;font:inherit}textarea{height:10rem}button{padding:.7rem 1rem}</style>
+<h1>浏览器验证截图存档</h1>
+<p>维护工具：将已捕获的 JPEG 截图保存为本地文件。所有处理在浏览器内完成，不上传数据。</p>
+<form>
+  <label>文件名<input name="filename" required pattern="[A-Za-z0-9_-]+\.jpg" value="lucky-browser-evidence.jpg"></label>
+  <label>JPEG Base64<textarea name="image" required spellcheck="false"></textarea></label>
+  <button>保存截图</button>
+</form>
+<p role="status"></p>
+<script>
+document.querySelector('form').addEventListener('submit',event=>{
+  event.preventDefault();const status=document.querySelector('[role=status]');
+  try{
+    const form=event.currentTarget,name=form.elements.filename.value;
+    if(!/^[A-Za-z0-9_-]+\.jpg$/.test(name))throw Error('请使用英文、数字、短横线或下划线命名的 JPG 文件。');
+    const data=form.elements.image.value.trim();if(data.length>14000000)throw Error('截图超过存档大小限制。');
+    const raw=atob(data);if(raw.charCodeAt(0)!==255||raw.charCodeAt(1)!==216||raw.charCodeAt(2)!==255)throw Error('请输入 JPEG 截图的 Base64。');
+    const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0)),url=URL.createObjectURL(new Blob([bytes],{type:'image/jpeg'}));
+    const link=document.createElement('a');link.href=url;link.download=name;link.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);form.elements.image.value='';status.textContent='截图已交给浏览器下载。';
+  }catch(error){status.textContent=error.message;}
+});
+</script>
+</html>
