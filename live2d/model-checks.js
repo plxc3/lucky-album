@@ -1,7 +1,8 @@
 // Project semantics checked before calling the official SDK parser.
-export function validateParameters(parameters,kind){
-  const expected=kind==='cat'?['ParamLuckyEar','ParamLuckyTail','ParamBreath','ParamLuckyResponse']:
-    kind==='girl'?['ParamBreath','ParamLuckyResponse']:null;
+export function validateParameters(parameters,kind,version=kind==='girl'?'v010':'v005'){
+  const expected=kind==='cat'&&version==='v005'?['ParamLuckyEar','ParamLuckyTail','ParamBreath','ParamLuckyResponse']:
+    kind==='girl'&&version==='v010'?['ParamBreath','ParamLuckyResponse']:
+    kind==='girl'&&version==='v012'?['ParamBreath','ParamLuckyResponse','ParamLuckyEar']:null;
   if(!expected)throw Error('Unknown character');
   const ids=[...parameters.ids];
   if(ids.length!==expected.length||new Set(ids).size!==ids.length||!expected.every(id=>ids.includes(id)))

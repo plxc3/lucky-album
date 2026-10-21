@@ -1,0 +1,22 @@
+{
+  "Version": 3,
+  "Parameters": [
+    {
+      "Id": "ParamBreath",
+      "GroupId": "",
+      "Name": "Lucky 呼吸"
+    },
+    {
+      "Id": "ParamLuckyResponse",
+      "GroupId": "",
+      "Name": "Lucky 双手与尾巴回应（无微点头）"
+    },
+    {
+      "Id": "ParamLuckyEar",
+      "GroupId": "",
+      "Name": "Lucky 独立耳部 −1…1"
+    }
+  ],
+  "ParameterGroups": [],
+  "Parts": []
+}

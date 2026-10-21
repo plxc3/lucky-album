@@ -1,0 +1,68 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "girl-v012-community-codec.moc3",
+    "Textures": [
+      "texture_00.png"
+    ],
+    "DisplayInfo": "girl-v012.cdi3.json",
+    "Motions": {
+      "Idle": [
+        {
+          "File": "motions/girl-idle.motion3.json",
+          "FadeInTime": 0.32,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Touch": [
+        {
+          "File": "motions/girl-touch.motion3.json",
+          "FadeInTime": 0.2,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Play": [
+        {
+          "File": "motions/girl-play.motion3.json",
+          "FadeInTime": 0.32,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Greet": [
+        {
+          "File": "motions/girl-greet.motion3.json",
+          "FadeInTime": 0.12,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Curious": [
+        {
+          "File": "motions/girl-curious.motion3.json",
+          "FadeInTime": 0.16,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "DoubleResponse": [
+        {
+          "File": "motions/girl-double-response.motion3.json",
+          "FadeInTime": 0.32,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Quiet": [
+        {
+          "File": "motions/girl-quiet.motion3.json",
+          "FadeInTime": 0.32,
+          "FadeOutTime": 0.4
+        }
+      ],
+      "Settle": [
+        {
+          "File": "motions/girl-settle.motion3.json",
+          "FadeInTime": 0.8,
+          "FadeOutTime": 0.28
+        }
+      ]
+    }
+  }
+}

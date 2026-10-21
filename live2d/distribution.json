@@ -1,9 +1,9 @@
 {
-  "version": "2026-10-20-1",
+  "version": "2026-10-21-1",
   "status": "experimental-baseline",
   "models": {
     "cat": "v005",
-    "girl": "v010"
+    "girl": "v012"
   },
   "sdk": {
     "core": "6.0.1",
@@ -14,8 +14,8 @@
   "files": [
     {
       "path": "model-checks.js",
-      "bytes": 2070,
-      "sha256": "9908f2379cb3246d5a9cfa1e1da008cafe953f1669f2da8d59ea649e79baa545"
+      "bytes": 2232,
+      "sha256": "4a238a225c9f6c579912463a4c5550b38dfcd5953821c77208a6daf2b88eab2b"
     },
     {
       "path": "models/cat/Lucky-cat-BASE-responsive-mesh-v005.2048/texture_00.png",
@@ -138,14 +138,74 @@
       "sha256": "7ea2956b4ecf331a2b7261e656ea636077bced4fc01def0a4f2b6e162a890e45"
     },
     {
+      "path": "models/girl/v012/girl-v012-community-codec.moc3",
+      "bytes": 176576,
+      "sha256": "bd70b76cf17b09d6b8874a77a5f55219e5b8b83cab14806e4d3fd8fe7399d558"
+    },
+    {
+      "path": "models/girl/v012/girl-v012.cdi3.json",
+      "bytes": 408,
+      "sha256": "1018c270c2463a55f007968172ddf7586883fb0c205b8951cc26fba62485985c"
+    },
+    {
+      "path": "models/girl/v012/model3.json",
+      "bytes": 1487,
+      "sha256": "37fd755742db05ea78cc884db9724785d93965d07aa3c0cbf7f233bf4769f8f5"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-curious.motion3.json",
+      "bytes": 2305,
+      "sha256": "8b252d55b65624bc78516084339a369feb133ff27f75a0df89f6068e48dd2eb2"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-double-response.motion3.json",
+      "bytes": 2441,
+      "sha256": "a98138e6a98b086bb91290b659c0e524e7814b3af4f3944062e3151c6b8fa694"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-greet.motion3.json",
+      "bytes": 2365,
+      "sha256": "e84d9d873c4998475a5c3862f1ef7f9daefc85f0ef7a24ba51619c545f0b9a86"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-idle.motion3.json",
+      "bytes": 2237,
+      "sha256": "f1f9dd1ce9e320677c3cffa8177770d1252de9d82bb78fa214b92b502f11ae84"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-play.motion3.json",
+      "bytes": 2642,
+      "sha256": "5de8c57c090450a0d277de12c64266c08c7d2c52a7e115df80ae4a55bfec9dd5"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-quiet.motion3.json",
+      "bytes": 1376,
+      "sha256": "d3a09b0e701e7f69645ebed5139a23964257b0565e6a2198815fd69a30853a72"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-settle.motion3.json",
+      "bytes": 938,
+      "sha256": "8a55c94e6336b5076f28f68de6f322b80765e97be0446980bcdfa16da5628778"
+    },
+    {
+      "path": "models/girl/v012/motions/girl-touch.motion3.json",
+      "bytes": 2286,
+      "sha256": "8d5f0e26a6c8debbc47000a4076f6915fe1b225cfc70ce8314fd65b525cd3b2b"
+    },
+    {
+      "path": "models/girl/v012/texture_00.png",
+      "bytes": 1776574,
+      "sha256": "9c5509e0eb099fe2f5625ce551e21a9e25d2c8a0b490b20e04ff0f868c9dbecf"
+    },
+    {
       "path": "motion-policy.js",
       "bytes": 4923,
       "sha256": "71a718696129e0c87df9c0c26b5a802025aad91a701e949b8f615cef67dc3b27"
     },
     {
       "path": "player.js",
-      "bytes": 18942,
-      "sha256": "2fd9a83590799f0213fbb223189b4d84c759077128e91ef1abb8b93e5ce534dd"
+      "bytes": 19058,
+      "sha256": "f0d4e6d4b9d3e0927582884dc72fcbc20b562da09d0a60acd4b6d9fd40e4dfa0"
     },
     {
       "path": "sdk/core.js",
@@ -222,5 +282,9 @@
       "bytes": 536,
       "sha256": "649aad2f6c0af55a7a4adcf33dbf78937ef9d77ed6ba917fd716176adce25afe"
     }
-  ]
+  ],
+  "modelManifests": {
+    "cat": "models/cat/model3.json",
+    "girl": "models/girl/v012/model3.json"
+  }
 }

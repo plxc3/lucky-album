@@ -21,12 +21,12 @@ assert(framework.slice(0,320).includes('live2d-open-software-license-agreement_e
 assert((await stat(join(root,'licenses/live2d/Framework-LICENSE.md'))).size>0);
 const expectedGroups=['Idle','Touch','Play','Greet','Curious','DoubleResponse','Quiet','Settle'];
 for(const kind of ['cat','girl']){
- const dir=join(base,'models',kind);
+ const dir=join(base,'models',kind,...(kind==='girl'?['v012']:[]));
  const model=JSON.parse(await readFile(join(dir,'model3.json'),'utf8'));
  const refs=model.FileReferences;
  assert.deepEqual(Object.keys(refs.Motions),expectedGroups);
  for(const file of [refs.Moc,refs.DisplayInfo,...refs.Textures])assert((await stat(join(dir,file))).size>0);
- const ids=kind==='cat'?['ParamLuckyEar','ParamLuckyTail','ParamBreath','ParamLuckyResponse']:['ParamBreath','ParamLuckyResponse'];
+ const ids=kind==='cat'?['ParamLuckyEar','ParamLuckyTail','ParamBreath','ParamLuckyResponse']:['ParamBreath','ParamLuckyResponse','ParamLuckyEar'];
  const bounds=new Map(ids.map(id=>[id,id==='ParamLuckyEar'||id==='ParamLuckyTail'?[-1,1]:[0,1]]));
  for(const [group,entries] of Object.entries(refs.Motions)){
   assert.equal(entries.length,1);

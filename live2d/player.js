@@ -1,4 +1,4 @@
-import {validateMotion,validateParameters} from './model-checks.js';
+import {validateMotion,validateParameters} from './model-checks.js?v=20261021-1';
 import {createMotionPolicy} from './motion-policy.js';
 const localUrl=path=>new URL(path,import.meta.url);
 const abortReason=signal=>signal?.reason??new DOMException('Character loading cancelled','AbortError');
@@ -117,15 +117,15 @@ class LuckyPlayer{
   }
   async loadUncached(kind){
     this.checkActive();
-    const {sdk,gl}=this,base=localUrl(`models/${kind}/`);
-    const manifest=await(await checkedFetch(new URL('model3.json',base),this.signal)).json();this.checkActive();
+    const {sdk,gl}=this,base=localUrl(kind==='girl'?'models/girl/v012/':`models/${kind}/`);
+    const manifest=await(await checkedFetch(new URL(kind==='girl'?'model3.json?v=20261021-1':'model3.json',base),this.signal)).json();this.checkActive();
     const refs=manifest.FileReferences;
     const bytes=await(await checkedFetch(new URL(refs.Moc,base),this.signal)).arrayBuffer();this.checkActive();
     const moc=sdk.CubismMoc.create(bytes,true);if(!moc)throw Error('Model consistency check failed');
     const model=moc.createModel();if(!model){moc.release();throw Error('Model could not be created');}
     const textures=[],motions=new Map();let renderer;
     try{
-      const {ids,bounds}=validateParameters(model.getModel().parameters,kind);
+      const {ids,bounds}=validateParameters(model.getModel().parameters,kind,kind==='girl'?'v012':'v005');
       for(const [group,entries] of Object.entries(refs.Motions||{})){
         if(!Object.hasOwn(motionLabels,group)||entries.length!==1)throw Error('Unexpected character motion');
         const data=await(await checkedFetch(new URL(entries[0].File,base),this.signal)).arrayBuffer();this.checkActive();
